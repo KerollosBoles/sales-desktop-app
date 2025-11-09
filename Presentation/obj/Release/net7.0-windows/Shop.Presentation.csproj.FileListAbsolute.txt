@@ -135,3 +135,7 @@ C:\Users\Kerollos\Desktop\sales-desktop-app\Presentation\obj\Release\net7.0-wind
 C:\Users\Kerollos\Desktop\sales-desktop-app\Presentation\obj\Release\net7.0-windows\Shop.Presentation.pdb
 C:\Users\Kerollos\Desktop\sales-desktop-app\Presentation\obj\Release\net7.0-windows\Shop.Presentation.genruntimeconfig.cache
 C:\Users\Kerollos\Desktop\sales-desktop-app\Presentation\obj\Release\net7.0-windows\ref\Shop.Presentation.dll
+C:\Users\Kerollos\Desktop\sales-desktop-app\Presentation\obj\Release\net7.0-windows\AddSupplierWindow.baml
+C:\Users\Kerollos\Desktop\sales-desktop-app\Presentation\obj\Release\net7.0-windows\SuppliersWindow.baml
+C:\Users\Kerollos\Desktop\sales-desktop-app\Presentation\obj\Release\net7.0-windows\AddSupplierWindow.g.cs
+C:\Users\Kerollos\Desktop\sales-desktop-app\Presentation\obj\Release\net7.0-windows\SuppliersWindow.g.cs

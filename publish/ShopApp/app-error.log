@@ -1,0 +1,40 @@
+[2025-11-09T14:13:18.4073487Z] App.OnStartup start
+[2025-11-09T14:13:18.4147128Z] Ensuring seed data
+[2025-11-09T14:13:19.8962082Z] Exception: Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such table: Merchants'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteCommand.PrepareAndEnumerateStatements(Stopwatch timer)+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteCommand.GetStatements(Stopwatch timer)+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Storage.NonRetryingExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at lambda_method96(Closure, QueryContext)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.Execute[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.Execute[TResult](Expression expression)
+   at Shop.Data.SeedData.EnsureSeedData(ShopDbContext db) in C:\Users\Kerollos\Desktop\sales-desktop-app\Data\SeedData.cs:line 55
+   at Shop.Presentation.App.OnStartup(StartupEventArgs e) in C:\Users\Kerollos\Desktop\sales-desktop-app\Presentation\App.xaml.cs:line 25
+[2025-11-09T14:13:19.8973527Z] App.OnStartup finished
+[2025-11-09T14:13:19.9820528Z] MainWindow ctor start
+[2025-11-09T14:13:20.6227756Z] MainWindow ctor done
+[2025-11-09T14:13:59.4587600Z] Exception: Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 1: 'no such table: Suppliers'.
+   at Microsoft.Data.Sqlite.SqliteException.ThrowExceptionForRC(Int32 rc, sqlite3 db)
+   at Microsoft.Data.Sqlite.SqliteCommand.PrepareAndEnumerateStatements(Stopwatch timer)+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteCommand.GetStatements(Stopwatch timer)+MoveNext()
+   at Microsoft.Data.Sqlite.SqliteDataReader.NextResult()
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.Data.Sqlite.SqliteCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Storage.NonRetryingExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+   at System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Shop.Presentation.InventoryWindow.LoadItems() in C:\Users\Kerollos\Desktop\sales-desktop-app\Presentation\InventoryWindow.xaml.cs:line 38
+   at Shop.Presentation.InventoryWindow..ctor(String username, Role role) in C:\Users\Kerollos\Desktop\sales-desktop-app\Presentation\InventoryWindow.xaml.cs:line 19
+   at Shop.Presentation.MainWindow.LoginBtn_Click(Object sender, RoutedEventArgs e) in C:\Users\Kerollos\Desktop\sales-desktop-app\Presentation\MainWindow.xaml.cs:line 52

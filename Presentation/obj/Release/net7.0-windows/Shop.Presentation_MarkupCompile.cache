@@ -10,11 +10,11 @@ none
 false
 TRACE;RELEASE;NET;NET7_0;NETCOREAPP
 C:\Users\Kerollos\Desktop\sales-desktop-app\Presentation\App.xaml
-12-913942988
+14283252759
 5-1343657851
-15-800121830
+17707590504
 222-350588889
-AddItemWindow.xaml;AddMerchantWindow.xaml;CreateAccountWindow.xaml;InventoryWindow.xaml;InvoiceWindow.xaml;MainWindow.xaml;MerchantsWindow.xaml;ResetPasswordConfirmWindow.xaml;ResetPasswordWindow.xaml;SalesWindow.xaml;SellWindow.xaml;Styles.xaml;
+AddItemWindow.xaml;AddMerchantWindow.xaml;AddSupplierWindow.xaml;CreateAccountWindow.xaml;InventoryWindow.xaml;InvoiceWindow.xaml;MainWindow.xaml;MerchantsWindow.xaml;ResetPasswordConfirmWindow.xaml;ResetPasswordWindow.xaml;SalesWindow.xaml;SellWindow.xaml;Styles.xaml;SuppliersWindow.xaml;
 
 False
 
