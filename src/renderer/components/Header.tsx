@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import GlobalSearch from './GlobalSearch';
+import Icon from './Icon';
 import './Header.css';
 
 const Header: React.FC = () => {
@@ -11,50 +12,54 @@ const Header: React.FC = () => {
     const toggleSearch = () => setSearchOpen(true);
     const closeSearch = () => setSearchOpen(false);
 
+    const navItems = useMemo(
+        () => [
+            { to: '/dashboard', label: t('nav.dashboard'), icon: 'dashboard' as const },
+            { to: '/sales', label: t('nav.sales'), icon: 'sales' as const },
+            { to: '/purchases', label: t('nav.purchases'), icon: 'purchases' as const },
+        ],
+        [t]
+    );
+
     return (
         <>
-            <header className="app-header">
+            <header className="app-header surface-card surface-card--glass">
                 <div className="app-header__brand">
+                    <div className="app-header__logo" aria-hidden="true">
+                        <Icon name="file-text" size={26} />
+                    </div>
+                    <div className="app-header__brand-copy">
+                        <span className="app-header__brand-title">{t('app.title')}</span>
+                        <span className="app-header__brand-subtitle">{t('app.subtitle')}</span>
+                    </div>
+                </div>
+                <nav className="app-header__nav" aria-label={t('app.navigation')}>
+                    {navItems.map((item) => (
+                        <NavLink key={item.to} to={item.to} activeClassName="is-active">
+                            <Icon name={item.icon} size={18} />
+                            <span>{item.label}</span>
+                        </NavLink>
+                    ))}
+                </nav>
+                <div className="app-header__actions">
                     <button
                         type="button"
                         className="app-header__search-button app-header__search-button--mobile"
                         onClick={toggleSearch}
                         aria-label={t('globalSearch.openButton')}
                     >
-                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                            <path
-                                d="M21 20.3 16.7 16a7 7 0 1 0-.7.7l4.4 4.3a.5.5 0 0 0 .7-.7ZM11 17a6 6 0 1 1 0-12 6 6 0 0 1 0 12Z"
-                                fill="currentColor"
-                            />
-                        </svg>
+                        <Icon name="search" size={20} />
                     </button>
-                    <h1>{t('app.title')}</h1>
+                    <button
+                        type="button"
+                        className="app-header__search-button"
+                        onClick={toggleSearch}
+                        aria-label={t('globalSearch.openButton')}
+                    >
+                        <Icon name="search" size={20} />
+                        <span>{t('globalSearch.openButton')}</span>
+                    </button>
                 </div>
-                <nav className="app-header__nav" aria-label={t('app.navigation')}>
-                    <NavLink to="/dashboard" activeClassName="is-active">
-                        {t('nav.dashboard')}
-                    </NavLink>
-                    <NavLink to="/sales" activeClassName="is-active">
-                        {t('nav.sales')}
-                    </NavLink>
-                    <NavLink to="/purchases" activeClassName="is-active">
-                        {t('nav.purchases')}
-                    </NavLink>
-                </nav>
-                <button
-                    type="button"
-                    className="app-header__search-button"
-                    onClick={toggleSearch}
-                    aria-label={t('globalSearch.openButton')}
-                >
-                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path
-                            d="M21 20.3 16.7 16a7 7 0 1 0-.7.7l4.4 4.3a.5.5 0 0 0 .7-.7ZM11 17a6 6 0 1 1 0-12 6 6 0 0 1 0 12Z"
-                            fill="currentColor"
-                        />
-                    </svg>
-                    <span>{t('globalSearch.openButton')}</span>
-                </button>
             </header>
             <GlobalSearch open={searchOpen} onClose={closeSearch} />
         </>

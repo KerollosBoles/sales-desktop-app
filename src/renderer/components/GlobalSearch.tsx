@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Invoice, InvoiceLineItem } from '../../models/invoice';
 import { loadInvoices } from '../services/invoiceStorage';
+import Icon from './Icon';
 import './GlobalSearch.css';
 
 interface GlobalSearchProps {
@@ -73,9 +74,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => {
         }
     }, [open]);
 
-    const handleCriteriaChange = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    const handleCriteriaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setCriteria((prev) => ({ ...prev, [name]: value }));
     };
@@ -164,16 +163,18 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => {
             }}
         >
             <div className="global-search-panel">
-                <div className="global-search-header">
-                    <div>
-                        <h2 id="global-search-title">{t('globalSearch.title')}</h2>
-                        <p className="global-search-subtitle">{t('globalSearch.subtitle')}</p>
+                <header className="global-search-header">
+                    <div className="global-search-header__copy">
+                        <h2 id="global-search-title" className="global-search-header__title">
+                            {t('globalSearch.title')}
+                        </h2>
+                        <p className="global-search-header__subtitle">{t('globalSearch.subtitle')}</p>
                     </div>
                     <button type="button" className="global-search-close" onClick={onClose}>
-                        <span aria-hidden="true">&times;</span>
+                        <Icon name="close" size={20} />
                         <span className="visually-hidden">{t('globalSearch.close')}</span>
                     </button>
-                </div>
+                </header>
                 <div className="global-search-content">
                     <form className="global-search-form" onSubmit={(event) => event.preventDefault()}>
                         <div className="global-search-form__group">
@@ -222,12 +223,10 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => {
                                     onChange={handleCriteriaChange}
                                 />
                             </div>
-                        </div>
-                        <div className="global-search-form__grid">
                             <div className="global-search-form__group">
-                                <label htmlFor="global-search-date">{t('globalSearch.fields.saleDate')}</label>
+                                <label htmlFor="global-search-sale-date">{t('globalSearch.fields.saleDate')}</label>
                                 <input
-                                    id="global-search-date"
+                                    id="global-search-sale-date"
                                     name="saleDate"
                                     type="date"
                                     value={criteria.saleDate}
@@ -235,9 +234,9 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => {
                                 />
                             </div>
                             <div className="global-search-form__group">
-                                <label htmlFor="global-search-start">{t('globalSearch.fields.startDate')}</label>
+                                <label htmlFor="global-search-start-date">{t('globalSearch.fields.startDate')}</label>
                                 <input
-                                    id="global-search-start"
+                                    id="global-search-start-date"
                                     name="startDate"
                                     type="date"
                                     value={criteria.startDate}
@@ -245,9 +244,9 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => {
                                 />
                             </div>
                             <div className="global-search-form__group">
-                                <label htmlFor="global-search-end">{t('globalSearch.fields.endDate')}</label>
+                                <label htmlFor="global-search-end-date">{t('globalSearch.fields.endDate')}</label>
                                 <input
-                                    id="global-search-end"
+                                    id="global-search-end-date"
                                     name="endDate"
                                     type="date"
                                     value={criteria.endDate}
@@ -256,8 +255,10 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => {
                             </div>
                         </div>
                     </form>
-                    <div className="global-search-results">
-                        <h3>{t('globalSearch.resultsHeading', { count: filteredInvoices.length })}</h3>
+                    <section className="global-search-results" aria-live="polite">
+                        <h3 className="global-search-results__title">
+                            {t('globalSearch.resultsHeading', { count: filteredInvoices.length })}
+                        </h3>
                         {filteredInvoices.length === 0 ? (
                             <p className="global-search-empty">{t('globalSearch.empty')}</p>
                         ) : (
@@ -266,24 +267,37 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => {
                                     <li key={invoice.id} className="global-search-result">
                                         <div className="global-search-result__summary">
                                             <div>
-                                                <span className="global-search-result__label">{t('sales.invoiceNumberLabel')}:</span>{' '}
-                                                <strong>{invoice.invoiceNumber}</strong>
+                                                <span className="global-search-result__label">
+                                                    {t('sales.invoiceNumberLabel')}:
+                                                </span>{' '}
+                                                {invoice.invoiceNumber}
                                             </div>
                                             <div>
-                                                <span className="global-search-result__label">{t('sales.saleDateLabel')}:</span>{' '}
-                                                <span>{invoice.saleDate}</span>
+                                                <span className="global-search-result__label">
+                                                    {t('sales.sellerLabel')}:
+                                                </span>{' '}
+                                                {invoice.sellerName}
                                             </div>
                                             <div>
-                                                <span className="global-search-result__label">{t('sales.sellerLabel')}:</span>{' '}
-                                                <span>{invoice.sellerName}</span>
+                                                <span className="global-search-result__label">
+                                                    {t('sales.buyerLabel')}:
+                                                </span>{' '}
+                                                {invoice.buyerName}
                                             </div>
                                             <div>
-                                                <span className="global-search-result__label">{t('sales.buyerLabel')}:</span>{' '}
-                                                <span>{invoice.buyerName}</span>
+                                                <span className="global-search-result__label">
+                                                    {t('sales.saleDateLabel')}:
+                                                </span>{' '}
+                                                {invoice.saleDate}
                                             </div>
                                             <div>
-                                                <span className="global-search-result__label">{t('sales.totalLabel')}:</span>{' '}
-                                                <span>{invoice.totalAmount.toLocaleString()}</span>
+                                                <span className="global-search-result__label">
+                                                    {t('sales.totalLabel')}:
+                                                </span>{' '}
+                                                {invoice.totalAmount.toLocaleString(undefined, {
+                                                    minimumFractionDigits: 2,
+                                                    maximumFractionDigits: 2,
+                                                })}
                                             </div>
                                         </div>
                                         {(matchedLineItems.length > 0 || notesMatch) && (
@@ -291,6 +305,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => {
                                                 {matchedLineItems.length > 0 && (
                                                     <div>
                                                         <p className="global-search-result__matches-title">
+                                                            <Icon name="file-text" size={16} />
                                                             {t('globalSearch.matches.lineItems')}
                                                         </p>
                                                         <ul>
@@ -298,16 +313,20 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => {
                                                                 <li key={item.id}>
                                                                     <span>{item.description}</span>
                                                                     <span className="global-search-result__matches-meta">
-                                                                        ×{item.quantity} · {item.unitPrice.toLocaleString()}
+                                                                        {item.quantity} × {item.unitPrice}
                                                                     </span>
                                                                 </li>
                                                             ))}
                                                         </ul>
                                                     </div>
                                                 )}
-                                                {notesMatch && (
+                                                {notesMatch && invoice.notes && (
                                                     <p className="global-search-result__matches-note">
-                                                        {t('globalSearch.matches.notes')}
+                                                        <Icon name="file-text" size={16} />
+                                                        <span className="global-search-result__label">
+                                                            {t('globalSearch.matches.notes')}:
+                                                        </span>
+                                                        <span>{invoice.notes}</span>
                                                     </p>
                                                 )}
                                             </div>
@@ -316,7 +335,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => {
                                 ))}
                             </ul>
                         )}
-                    </div>
+                    </section>
                 </div>
             </div>
         </div>

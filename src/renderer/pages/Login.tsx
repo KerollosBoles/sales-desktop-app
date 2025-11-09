@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { login } from '../services/authService';
 import { useTranslation } from 'react-i18next';
+import { login } from '../services/authService';
+import Icon from '../components/Icon';
+import './Login.css';
 
-const Login = () => {
+const Login: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const history = useHistory();
     const { t } = useTranslation();
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
+    const handleLogin = async (event: React.FormEvent) => {
+        event.preventDefault();
         try {
             await login(username, password);
             history.push('/dashboard');
@@ -21,30 +23,47 @@ const Login = () => {
     };
 
     return (
-        <div className="login-container">
-            <h2>{t('login.title')}</h2>
-            {error && <p className="error">{error}</p>}
-            <form onSubmit={handleLogin}>
-                <div>
-                    <label>{t('login.username')}</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
+        <div className="login-page">
+            <div className="login-card surface-card surface-card--glass">
+                <div className="login-card__header">
+                    <div className="login-card__icon" aria-hidden="true">
+                        <Icon name="lock" size={28} />
+                    </div>
+                    <div>
+                        <h1>{t('login.title')}</h1>
+                        <p>{t('login.subtitle')}</p>
+                    </div>
                 </div>
-                <div>
-                    <label>{t('login.password')}</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit">{t('login.submit')}</button>
-            </form>
+                {error && <p className="login-card__error">{error}</p>}
+                <form onSubmit={handleLogin} className="login-form">
+                    <label>
+                        <span>{t('login.username')}</span>
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(event) => setUsername(event.target.value)}
+                            required
+                        />
+                    </label>
+                    <label>
+                        <span>{t('login.password')}</span>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(event) => setPassword(event.target.value)}
+                            required
+                        />
+                    </label>
+                    <button type="submit" className="button button--primary">
+                        <Icon name="user" size={18} />
+                        {t('login.submit')}
+                    </button>
+                    <button type="button" className="button button--ghost login-form__secondary">
+                        <Icon name="search" size={16} />
+                        {t('login.forgotPassword')}
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };

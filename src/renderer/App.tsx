@@ -12,13 +12,19 @@ const App: React.FC = () => {
     return (
         <Provider store={store}>
             <Router>
-                <Header />
-                <Switch>
-                    <Route path="/" exact component={Login} />
-                    <Route path="/dashboard" component={Dashboard} />
-                    <Route path="/sales" component={Sales} />
-                    <Route path="/purchases" component={Purchases} />
-                </Switch>
+                <div className="app-shell">
+                    <Header />
+                    <main className="app-main">
+                        <div className="app-main__inner">
+                            <Switch>
+                                <Route path="/" exact component={Login} />
+                                <Route path="/dashboard" component={Dashboard} />
+                                <Route path="/sales" component={Sales} />
+                                <Route path="/purchases" component={Purchases} />
+                            </Switch>
+                        </div>
+                    </main>
+                </div>
             </Router>
         </Provider>
     );

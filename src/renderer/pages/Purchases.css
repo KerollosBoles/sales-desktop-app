@@ -1,0 +1,89 @@
+.purchases-page {
+    width: 100%;
+}
+
+.purchases-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.purchases-hero__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.purchases-form-card,
+.purchases-list-card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.purchases-form-card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.purchases-form {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.purchases-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.purchases-form input {
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.purchases-form input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px var(--color-primary-soft);
+}
+
+.purchases-form button {
+    grid-column: 1 / -1;
+    justify-self: flex-end;
+}
+
+.purchases-table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+}
+
+.purchases-table th,
+.purchases-table td {
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    padding: 12px 14px;
+    text-align: left;
+}
+
+.purchases-table th {
+    background: var(--color-primary);
+    color: #ffffff;
+    font-weight: 600;
+}
+
+@media (max-width: 720px) {
+    .purchases-form button {
+        justify-self: stretch;
+    }
+}

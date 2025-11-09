@@ -2,6 +2,7 @@
   "appTitle": "Sales and Purchase Tracker",
   "app": {
     "title": "Sales Management",
+    "subtitle": "Track every invoice, sale, and purchase in one beautiful workspace.",
     "navigation": "Main navigation"
   },
   "nav": {
@@ -11,6 +12,7 @@
   },
   "login": {
     "title": "Login",
+    "subtitle": "Secure access to your business dashboard",
     "username": "Username",
     "password": "Password",
     "submit": "Sign in",
@@ -20,11 +22,16 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome to the Dashboard",
+    "subtitle": "All your business tools are just one click away.",
     "sales": "Sales",
-    "purchases": "Purchases"
+    "salesDescription": "Create invoices, manage line items, and print polished receipts.",
+    "purchases": "Purchases",
+    "purchasesDescription": "Record incoming stock and keep supplier activity organized.",
+    "open": "Open"
   },
   "sales": {
     "title": "Sales & Invoices",
+    "subtitle": "Craft invoices, filter by any detail, and print perfect A4 copies.",
     "recordSale": "Record Sale",
     "saleDate": "Sale Date",
     "buyer": "Buyer",
@@ -77,6 +84,7 @@
   },
   "purchases": {
     "title": "Purchases",
+    "subtitle": "Log inventory coming in and know who supplied it.",
     "recordPurchase": "Record Purchase",
     "purchaseDate": "Purchase Date",
     "supplier": "Supplier",
@@ -84,7 +92,9 @@
     "amount": "Amount",
     "submit": "Submit",
     "buyer": "Buyer",
-    "add": "Add purchase"
+    "add": "Add purchase",
+    "recent": "Recent purchases",
+    "emptyState": "No purchases recorded yet. Start by adding a purchase above."
   },
   "permissions": {
     "owner": "Owner",

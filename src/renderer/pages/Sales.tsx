@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Invoice, InvoiceLineItem } from '../../models/invoice';
 import { deleteInvoice, loadInvoices, saveInvoice } from '../services/invoiceStorage';
+import Icon from '../components/Icon';
 import './Sales.css';
 
 interface InvoiceFormState {
@@ -32,7 +33,9 @@ const createLineItem = (): InvoiceLineItem => ({
 
 const generateInvoiceNumber = () => {
     const now = new Date();
-    const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+    const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(
+        now.getDate()
+    ).padStart(2, '0')}`;
     const timePart = `${now.getHours()}${now.getMinutes()}${now.getSeconds()}`;
     return `INV-${datePart}-${timePart}`;
 };
@@ -100,7 +103,8 @@ const Sales: React.FC = () => {
     const handleRemoveLineItem = (id: string) => {
         setFormState((prev) => ({
             ...prev,
-            lineItems: prev.lineItems.length > 1 ? prev.lineItems.filter((item) => item.id !== id) : prev.lineItems,
+            lineItems:
+                prev.lineItems.length > 1 ? prev.lineItems.filter((item) => item.id !== id) : prev.lineItems,
         }));
     };
 
@@ -125,7 +129,6 @@ const Sales: React.FC = () => {
         }
 
         const totalAmount = calculateTotalAmount(cleanedItems);
-
         const notes = formState.notes.trim();
 
         const invoice: Invoice = {
@@ -199,7 +202,7 @@ const Sales: React.FC = () => {
                     display: flex;
                     justify-content: space-between;
                     align-items: flex-start;
-                    border-bottom: 2px solid #0b7285;
+                    border-bottom: 2px solid #1d4ed8;
                     padding-bottom: 16px;
                     margin-bottom: 24px;
                 }
@@ -207,7 +210,7 @@ const Sales: React.FC = () => {
                 .invoice-print h1 {
                     margin: 0;
                     font-size: 28px;
-                    color: #0b7285;
+                    color: #1d4ed8;
                 }
 
                 .invoice-meta {
@@ -243,7 +246,7 @@ const Sales: React.FC = () => {
                 }
 
                 th {
-                    background-color: #0b7285;
+                    background-color: #1d4ed8;
                     color: #fff;
                 }
 
@@ -251,7 +254,7 @@ const Sales: React.FC = () => {
                     text-align: right;
                     font-size: 18px;
                     font-weight: bold;
-                    color: #0b7285;
+                    color: #1d4ed8;
                 }
 
                 .invoice-notes {
@@ -375,19 +378,22 @@ const Sales: React.FC = () => {
         });
     };
 
+    const currencyFormat = (value: number) =>
+        value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
     return (
-        <div className="sales-page">
-            <header className="sales-header">
-                <h1>{t('sales.title')}</h1>
-                <div className="sales-search">
-                    <span className="search-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" focusable="false" role="img">
-                            <path
-                                fill="currentColor"
-                                d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C8.01 14 6 11.99 6 9.5S8.01 5 10.5 5 15 7.01 15 9.5 12.99 14 10.5 14z"
-                            />
-                        </svg>
+        <div className="sales-page app-grid">
+            <section className="sales-hero surface-card surface-card--glass">
+                <div className="sales-hero__copy">
+                    <span className="badge">
+                        <Icon name="file-text" size={16} />
+                        {t('sales.title')}
                     </span>
+                    <h1 className="section-heading">{t('sales.title')}</h1>
+                    <p className="section-subtitle">{t('sales.subtitle')}</p>
+                </div>
+                <div className="sales-hero__search">
+                    <Icon name="search" size={18} />
                     <input
                         type="search"
                         value={filters.searchTerm}
@@ -396,10 +402,16 @@ const Sales: React.FC = () => {
                         aria-label={t('sales.searchPlaceholder')}
                     />
                 </div>
-            </header>
+            </section>
 
-            <section className="filters-panel">
-                <h2>{t('sales.filterSectionTitle')}</h2>
+            <section className="sales-panel surface-card">
+                <div className="sales-panel__header">
+                    <h2 className="section-heading">{t('sales.filterSectionTitle')}</h2>
+                    <button type="button" className="button button--ghost" onClick={resetFilters}>
+                        <Icon name="minus" size={16} />
+                        {t('sales.resetFilters')}
+                    </button>
+                </div>
                 <div className="filters-grid">
                     <label>
                         <span>{t('sales.filter.invoiceNumber')}</span>
@@ -430,14 +442,13 @@ const Sales: React.FC = () => {
                         <input type="date" value={filters.endDate} onChange={handleFilterChange('endDate')} />
                     </label>
                 </div>
-                <button type="button" className="secondary" onClick={resetFilters}>
-                    {t('sales.resetFilters')}
-                </button>
             </section>
 
-            <section className="invoice-form">
-                <h2>{t('sales.form.title')}</h2>
-                <form onSubmit={handleSubmit}>
+            <section className="sales-panel surface-card">
+                <div className="sales-panel__header">
+                    <h2 className="section-heading">{t('sales.form.title')}</h2>
+                </div>
+                <form onSubmit={handleSubmit} className="sales-form">
                     <div className="form-grid">
                         <label>
                             <span>{t('sales.form.invoiceNumber')}</span>
@@ -486,16 +497,20 @@ const Sales: React.FC = () => {
                     </div>
 
                     <div className="line-items">
-                        <h3>{t('sales.form.lineItemsTitle')}</h3>
+                        <div className="line-items__header">
+                            <h3>{t('sales.form.lineItemsTitle')}</h3>
+                            <button type="button" className="button button--ghost" onClick={handleAddLineItem}>
+                                <Icon name="plus" size={16} />
+                                {t('sales.form.addLineItem')}
+                            </button>
+                        </div>
                         {formState.lineItems.map((item) => (
                             <div key={item.id} className="line-item-row">
                                 <input
                                     type="text"
                                     value={item.description}
                                     placeholder={t('sales.form.itemDescription')}
-                                    onChange={(event) =>
-                                        handleLineItemChange(item.id, 'description', event.target.value)
-                                    }
+                                    onChange={(event) => handleLineItemChange(item.id, 'description', event.target.value)}
                                     required
                                 />
                                 <input
@@ -516,15 +531,16 @@ const Sales: React.FC = () => {
                                     onChange={(event) => handleLineItemChange(item.id, 'unitPrice', event.target.value)}
                                     required
                                 />
-                                <button type="button" className="icon" onClick={() => handleRemoveLineItem(item.id)}>
-                                    <span aria-hidden="true">&times;</span>
-                                    <span className="sr-only">{t('sales.form.removeLineItem')}</span>
+                                <button
+                                    type="button"
+                                    className="icon-button icon-button--danger"
+                                    onClick={() => handleRemoveLineItem(item.id)}
+                                    aria-label={t('sales.form.removeLineItem')}
+                                >
+                                    <Icon name="trash" size={16} />
                                 </button>
                             </div>
                         ))}
-                        <button type="button" className="secondary" onClick={handleAddLineItem}>
-                            {t('sales.form.addLineItem')}
-                        </button>
                     </div>
 
                     <label className="notes-field">
@@ -537,46 +553,65 @@ const Sales: React.FC = () => {
                     </label>
 
                     <div className="form-actions">
-                        <button type="submit" className="primary">
+                        <button type="submit" className="button button--primary">
+                            <Icon name="sales" size={16} />
                             {t('sales.form.saveInvoice')}
                         </button>
-                        <button type="button" className="secondary" onClick={resetForm}>
+                        <button type="button" className="button button--ghost" onClick={resetForm}>
+                            <Icon name="minus" size={16} />
                             {t('sales.form.resetForm')}
                         </button>
                     </div>
                 </form>
             </section>
 
-            <section className="invoice-list">
-                <h2>{t('sales.savedInvoicesTitle')}</h2>
+            <section className="sales-panel surface-card">
+                <div className="sales-panel__header">
+                    <h2 className="section-heading">{t('sales.savedInvoicesTitle')}</h2>
+                    <span className="badge">
+                        <Icon name="calendar" size={16} />
+                        {filteredInvoices.length}
+                    </span>
+                </div>
                 {filteredInvoices.length === 0 ? (
                     <p className="empty-state">{t('sales.emptyState')}</p>
                 ) : (
-                    <ul>
+                    <ul className="invoice-list">
                         {filteredInvoices.map((invoice) => (
                             <li key={invoice.id} className="invoice-card">
-                                <div className="invoice-card-header">
-                                    <div>
+                                <div className="invoice-card__header">
+                                    <div className="invoice-card__meta">
                                         <h3>{invoice.invoiceNumber}</h3>
-                                        <p>
-                                            {t('sales.saleDateLabel')}: <strong>{invoice.saleDate}</strong>
-                                        </p>
-                                        <p>
-                                            {t('sales.sellerLabel')}: <strong>{invoice.sellerName}</strong>
-                                        </p>
-                                        <p>
-                                            {t('sales.buyerLabel')}: <strong>{invoice.buyerName}</strong>
-                                        </p>
+                                        <div className="invoice-card__meta-row">
+                                            <Icon name="calendar" size={16} />
+                                            <span>
+                                                {t('sales.saleDateLabel')}: <strong>{invoice.saleDate}</strong>
+                                            </span>
+                                        </div>
+                                        <div className="invoice-card__meta-row">
+                                            <Icon name="sales" size={16} />
+                                            <span>
+                                                {t('sales.sellerLabel')}: <strong>{invoice.sellerName}</strong>
+                                            </span>
+                                        </div>
+                                        <div className="invoice-card__meta-row">
+                                            <Icon name="purchases" size={16} />
+                                            <span>
+                                                {t('sales.buyerLabel')}: <strong>{invoice.buyerName}</strong>
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="invoice-actions">
-                                        <button type="button" className="primary" onClick={() => handlePrint(invoice)}>
+                                    <div className="invoice-card__actions">
+                                        <button type="button" className="button button--ghost" onClick={() => handlePrint(invoice)}>
+                                            <Icon name="printer" size={16} />
                                             {t('sales.printInvoice')}
                                         </button>
                                         <button
                                             type="button"
-                                            className="danger"
+                                            className="button button--danger"
                                             onClick={() => handleDelete(invoice.id)}
                                         >
+                                            <Icon name="trash" size={16} />
                                             {t('sales.deleteInvoice')}
                                         </button>
                                     </div>
@@ -597,8 +632,8 @@ const Sales: React.FC = () => {
                                                 <td>{index + 1}</td>
                                                 <td>{item.description}</td>
                                                 <td>{item.quantity}</td>
-                                                <td>{item.unitPrice.toFixed(2)}</td>
-                                                <td>{(item.quantity * item.unitPrice).toFixed(2)}</td>
+                                                <td>{currencyFormat(item.unitPrice)}</td>
+                                                <td>{currencyFormat(item.quantity * item.unitPrice)}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -610,7 +645,7 @@ const Sales: React.FC = () => {
                                 )}
                                 <div className="invoice-summary">
                                     <span>{t('sales.totalLabel')}:</span>
-                                    <strong>{invoice.totalAmount.toFixed(2)}</strong>
+                                    <strong>{currencyFormat(invoice.totalAmount)}</strong>
                                 </div>
                             </li>
                         ))}
