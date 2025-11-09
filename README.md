@@ -45,74 +45,102 @@ cd "C:\Users\Kerollos\Desktop\sales-desktop-app"
 # Sales Desktop Application
 
 This is a desktop application for recording sales and purchase activities. It supports multiple item types, sale dates, and buyer information, with a focus on user-friendly interaction in both English and Arabic.
+# Sales Desktop App — توثيق وشرح التنفيذ
 
-## Features
+هذا المستودع يحتوي على تطبيق سطح مكتب مكتوب بـ C# (.NET) لإدارة المبيعات والمخزن (متخصّص لإطارات السيارات). التوثيق التالي يوضّح بنية البيانات، العلاقات، أماكن قواعد البيانات، وكيفية التشغيل والنشر والاختبار.
 
-- **User Authentication**: Secure login page with role-based access control.
-- **Role Management**: Different permissions for owner and employee roles.
-- **Sales Recording**: Easily record and view sales transactions.
-- **Purchases Management**: Manage and track purchase activities.
-- **Multi-language Support**: Available in English and Arabic.
+## نظرة عامة سريعة
+- المشروع مُنظّم إلى ثلاث طبقات رئيسية:
+	- `Shop.Core` : نماذج الكيانات (Entities) مثل `User`, `Item`, `Invoice`, `InvoiceLine`, `Merchant`, `Supplier`.
+	- `Shop.Data` : EF Core DbContext وعمليات التهيئة والـ Seed.
+	- `Shop.Presentation` : واجهة المستخدم (WPF) — النوافذ: تسجيل الدخول، إنشاء حساب، المخزن، إضافة صنف، البيع (فاتورة متعددة البنود)، عرض الفاتورة، الموردين، المبيعات.
 
-## Project Structure
+## قواعد البيانات ومواقعها
+- `shop.db` (البيانات التشغيلية للمخزن والفواتير والسلع والتجار)
+	- الموقع: بجانب ملف التنفيذ عند تشغيل التطبيق المنشور (مثلاً: `publish\ShopApp\shop.db`) أو أثناء التطوير في مجلد المشروع.
 
+- `accounts.db` (قاعدة بيانات منفصلة لحسابات المستخدمين)
+	- الموقع: `%LOCALAPPDATA%\ShopApp\accounts.db` (مفصول عن `shop.db` لأمان وفصل نطاق الحسابات).
+	- ملاحظة: الحقول الحساسة داخل `accounts.db` مثل `Email` و`ResetToken` مشفّرة باستخدام DPAPI (محمية لحساب Windows الحالي). لذلك لا يمكن فك التشفير على جهاز أو حساب ويندوز آخر دون إجراءات إضافية.
+
+## أهم الكيانات والعلاقات (باختصار)
+- Supplier (المستورد/المورد)
+	- حقول: `Id`, `Name`, `Phone`, `Location`, `Address`, `CreatedAt`
+	- علاقة: Supplier (1) → Items (many)
+
+- Item (الصنف / الكاوتش)
+	- حقول أساسية: `Id`, `Name`, `Brand`, `TireModel`, `Quantity`, `PurchasePrice`, `PurchaseDate`
+	- روابط: `SupplierId` (FK إلى `Supplier`)، `LastPurchaseDate`, `LastPurchaseQuantity`, `LastSoldAt`
+	- يحدّث التطبيق `LastPurchaseDate` عند إضافة صنف جديد، و`LastSoldAt` عند تنفيذ عملية بيع.
+
+- Merchant (التاجر / المشتري)
+	- حقول: `Id`, `Name`, `Phone`, `Location`, `Address`, `CreatedAt`
+	- علاقة: Merchant (1) → Invoices (many)
+
+- Invoice (الفاتورة)
+	- حقول: `Id`, `InvoiceNumber` (مُحدد عند الإنشاء وغير قابل للتغيير)، `Date`, `SellerName` (نسخة نصية)، `SellerId` (رقم مرجعي منطقي إلى `accounts.db`), `MerchantId`, `LocationSoldTo`
+	- علاقة: Invoice (1) → InvoiceLines (many)
+	- ملاحظة: `InvoiceNumber` يتم توليده عند إنشاء الفاتورة ويُحفظ ثابتًا (immutable) لضمان سلامة المراجع.
+
+- InvoiceLine (بنود الفاتورة)
+	- حقول: `Id`, `InvoiceId`, `ItemId`, `Quantity`, `Price`
+
+ملاحظة: لأن `SellerId` يشير إلى سجل مستخدم موجود في `accounts.db` (قاعدة منفصلة)، فلا يمكن عمل FK صريح بين قاعدتي بيانات مختلفتين داخل EF Core؛ ما نفعله هو حفظ `SellerId` كقيمة رقمية تربط منطقيًا بين القاعدتين. عند عرض بيانات البائع، يقوم التطبيق بقراءة `accounts.db` لاسترجاع اسم المستخدم أو البريد المشفّر (بعد فك التشفير عبر DPAPI).
+
+## الأمان والتشفير
+- كلمات المرور مخزنة كـ SHA256 hash (AuthService.HashPassword).
+- `accounts.db` يتضمن حماية إضافية للحقول الحساسة (`Email`, `ResetToken`) عبر DPAPI (`Shop.Data.DpapiProtector`) مع النطاق `CurrentUser`:
+	- ميزة: لا يلزمك تخزين مفتاح خارجي؛ البيانات محمية على مستوى نظام ويندوز.
+	- قيد: إذا نقلت ملف `accounts.db` إلى جهاز آخر أو إلى حساب Windows آخر فلن تتمكن من فك تشفير الحقول المشفّرة.
+
+## متطلبات وتشغيل محلي (تطوير)
+- تأكد تثبيت .NET SDK المناسب (المشروع يهدف .NET 7+/net7.0-windows؛ قد يظهر تحذير إذا استعملت SDK أحدث).
+- بناء المشروع (من مجلد الجذر):
+
+```powershell
+dotnet build "C:\Users\Kerollos\Desktop\sales-desktop-app\ShopSolution.sln" -c Release
 ```
-sales-desktop-app
-├── src
-│   ├── main
-│   │   ├── main.ts          # Entry point for the Electron application
-│   │   └── preload.ts       # Preload script for secure context
-│   ├── renderer
-│   │   ├── index.tsx        # Main entry point for the React application
-│   │   ├── App.tsx          # Main application component
-│   │   ├── pages
-│   │   │   ├── Login.tsx    # User login component
-│   │   │   ├── Dashboard.tsx # Main interface after login
-│   │   │   ├── Sales.tsx    # Component for recording sales
-│   │   │   └── Purchases.tsx # Component for managing purchases
-│   │   ├── components
-│   │   │   ├── Header.tsx    # Application header component
-│   │   │   ├── ItemForm.tsx  # Form for adding/editing items
-│   │   │   └── PermissionGate.tsx # Component for access control
-│   │   ├── services
-│   │   │   ├── authService.ts # Authentication functions
-│   │   │   └── dbService.ts   # Database interaction functions
-│   │   ├── store
-│   │   │   └── index.ts       # Global state management
-│   │   └── i18n
-│   │       ├── en.json        # English translations
-│   │       └── ar.json        # Arabic translations
-│   ├── models
-│   │   ├── user.ts            # User model
-│   │   ├── item.ts            # Item model
-│   │   └── transaction.ts      # Transaction model
-│   └── db
-│       └── migrations
-│           └── init.sql       # Database initialization script
-├── package.json                # NPM configuration
-├── tsconfig.json               # TypeScript configuration
-├── electron-builder.json       # Electron build configuration
-├── ormconfig.json              # ORM configuration
-└── README.md                   # Project documentation
+
+## النشر (Publish) وتشغيل النسخة المنشورة
+- أمر نشر مشروع العرض (سيضع الملفات في `publish\ShopApp`):
+
+```powershell
+dotnet publish "C:\Users\Kerollos\Desktop\sales-desktop-app\Presentation\Shop.Presentation.csproj" -c Release -o "C:\Users\Kerollos\Desktop\sales-desktop-app\publish\ShopApp"
 ```
 
-## Installation
+- بعد النشر، شغّل الملف المنشور (`Shop.Presentation.exe`) داخل المجلد `publish\ShopApp`، وتأكد أن هناك ملف `shop.db` موجودًا أو أن التطبيق سيقوم بإنشائه/تهيئته في حال عدم وجوده.
 
-1. Clone the repository.
-2. Navigate to the project directory.
-3. Run `npm install` to install dependencies.
-4. Run `npm start` to launch the application.
+## فحص المسارات والاختبارات (خطوات مقترحة للتجربة)
+1. شغّل التطبيق المنشور.
+2. أنشئ حسابًا جديدًا (سيُطلب بريد Gmail؛ التطبيق يتحقّق أن البريد ينتهي بـ `@gmail.com`).
+3. سجّل الدخول بالحساب الذي أنشأته.
+4. افتح صفحة الموردين وأضف موردًا جديدًا أو استخدم الموردين الممهدين.
+5. أضف صنفًا جديدًا واربطه بالمورد.
+6. افتح نافذة البيع (Sell) وأضف بنودًا متعددة، ثم احفظ الفاتورة.
+7. افتح صفحة الفواتير لعرض الفاتورة المنشأة. تأكد أن رقم الفاتورة ثابت وأن اسم البائع يظهر (يقارَن عبر `accounts.db`).
 
-## Usage
+## ملاحظات تطويرية وقيود
+- فصل `accounts.db` عن `shop.db` يزيد من أمان الحسابات لكنه يعني أيضًا أن العلاقات عبر القاعدتين تكون منطقية وليست مفروضة بقواعد بيانات (no cross-DB FK).
+- إذا رغبت في مشاركة `accounts.db` بين أجهزة/مستخدمين مختلفين، فسنحتاج إلى حل إدارة مفتاح مركزي أو استخدام تشفير يعتمد على كلمة سر/مفتاح خارجي بدلاً من DPAPI CurrentUser.
+- في حال الحاجة إلى تشفير كامل لقاعدة البيانات (SQLCipher) يمكن إضافته لكنّه يتطلب اعتمادات خارجية وإعدادات نشر مختلفة.
 
-- Log in using your credentials.
-- Depending on your role, access the sales and purchases pages to manage transactions.
-- Use the item form to add or edit items as needed.
+## أين أجد الأشياء بعد النشر
+- مجلد النشر: `publish\ShopApp` داخل جذر المشروع.
+- قواعد البيانات أثناء التشغيل:
+	- `shop.db` (مجاور للـ exe المنشور أو في مكان آخر حسب إعداداتك).
+	- `accounts.db` في `%LOCALAPPDATA%\ShopApp\accounts.db`.
 
-## Contributing
+## تغييرات واجهة المستخدم (تم تنفيذها)
+- شاشة إنشاء الحساب: أضيفت خاصية تأكيد كلمة السر وفرض بريد Gmail لحفظ إمكانية استعادة كلمة السر.
+- أيقونات أزرار تسجيل الدخول وإنشاء الحساب كبرت قليلًا لملاءمة الواجهة.
+- شاشة إضافة عنصر تنشئ موردًا تلقائيًا إن لم يكن موجودًا، وتحدث `LastPurchaseDate` و`LastPurchaseQuantity`.
+- عند البيع يتم تحديث `Item.LastSoldAt` تلقائيًا.
 
-Contributions are welcome! Please submit a pull request or open an issue for any suggestions or improvements.
+## كيفية المتابعة
+بعد أن تنشر وتجرّب، قلّ لي ما الإضافات التي تريدها (ذكرت أنك تريد إضافة أشياء لاحقًا). سأقوم بإضافة أي شاشات أو حقول إضافية تطلبها مثل:
+- تقارير شهرية مفصّلة (PDF)
+- صفحة عرض فواتير لكل تاجر
+- تخطيط/تنقيح حقول الأصناف (سعر الشراء، أسعار البيع، هوامش الربح)
 
-## License
-
-This project is licensed under the MIT License.
+---
+تم تحديث هذا الملف ليشمل التغييرات الحالية (نموذج المورد، فصل قاعدة الحسابات مع تشفير DPAPI، ربط الفواتير بمستخدم البائع بشكل منطقي، وغيرها). إذا تحب، سأقوم الآن بعملية النشر وتجربة مسار العمل النهائي ثم أبلغك بالنتيجة حتى يمكن أن تضيف المتطلبات الأخرى.
