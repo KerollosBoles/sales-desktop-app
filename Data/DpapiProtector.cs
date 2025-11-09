@@ -11,7 +11,7 @@ namespace Shop.Data
         {
             if (plain == null) return string.Empty;
             var bytes = Encoding.UTF8.GetBytes(plain);
-            var protectedBytes = ProtectedData.Protect(bytes, null, DataProtectionScope.CurrentUser);
+            var protectedBytes = System.Security.Cryptography.ProtectedData.Protect(bytes, null, System.Security.Cryptography.DataProtectionScope.CurrentUser);
             return Convert.ToBase64String(protectedBytes);
         }
 
@@ -22,7 +22,7 @@ namespace Shop.Data
             try
             {
                 var bytes = Convert.FromBase64String(protectedBase64);
-                var plain = ProtectedData.Unprotect(bytes, null, DataProtectionScope.CurrentUser);
+                var plain = System.Security.Cryptography.ProtectedData.Unprotect(bytes, null, System.Security.Cryptography.DataProtectionScope.CurrentUser);
                 return Encoding.UTF8.GetString(plain);
             }
             catch

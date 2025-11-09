@@ -80,9 +80,8 @@ public static class SeedData
                 foreach (var g in groups)
                 {
                     var first = g.First();
-                    var inv = new Invoice
+                    var inv = new Invoice(g.Key)
                     {
-                        InvoiceNumber = g.Key,
                         Date = first.Date,
                         SellerName = first.SellerName,
                         MerchantId = first.MerchantId,
