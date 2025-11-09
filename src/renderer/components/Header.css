@@ -1,0 +1,108 @@
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 16px 24px;
+    background: linear-gradient(90deg, #1e3a8a, #2563eb);
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(30, 58, 138, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 500;
+}
+
+.app-header__brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.app-header__brand h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.app-header__nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.app-header__nav a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 999px;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.app-header__nav a:hover,
+.app-header__nav a:focus {
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+}
+
+.app-header__nav .is-active {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+}
+
+.app-header__search-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.18);
+    border: none;
+    color: #ffffff;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.app-header__search-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+.app-header__search-button:hover,
+.app-header__search-button:focus {
+    background: rgba(255, 255, 255, 0.28);
+    transform: translateY(-1px);
+}
+
+.app-header__search-button--mobile {
+    display: none;
+    padding: 10px;
+}
+
+.app-header__search-button--mobile span {
+    display: none;
+}
+
+@media (max-width: 720px) {
+    .app-header {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+    }
+
+    .app-header__nav {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .app-header__search-button span {
+        display: none;
+    }
+
+    .app-header__search-button--mobile {
+        display: inline-flex;
+    }
+}

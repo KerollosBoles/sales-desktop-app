@@ -1,16 +1,26 @@
 {
+  "app": {
+    "title": "إدارة المبيعات",
+    "navigation": "قائمة التنقل الرئيسية"
+  },
+  "nav": {
+    "dashboard": "الرئيسية",
+    "sales": "المبيعات",
+    "purchases": "المشتريات"
+  },
   "login": {
     "title": "تسجيل الدخول",
     "username": "اسم المستخدم",
     "password": "كلمة المرور",
-    "loginButton": "تسجيل الدخول",
+    "submit": "تسجيل الدخول",
+    "error": "تعذر تسجيل الدخول، يرجى التحقق من البيانات.",
     "forgotPassword": "نسيت كلمة المرور؟"
   },
   "dashboard": {
+    "title": "لوحة التحكم",
     "welcome": "مرحبًا بك في لوحة التحكم",
     "sales": "المبيعات",
-    "purchases": "المشتريات",
-    "logout": "تسجيل الخروج"
+    "purchases": "المشتريات"
   },
   "sales": {
     "title": "المبيعات والفواتير",
@@ -71,7 +81,9 @@
     "supplier": "المورد",
     "itemType": "نوع العنصر",
     "amount": "المبلغ",
-    "submit": "إرسال"
+    "submit": "إرسال",
+    "buyer": "المشتري",
+    "add": "إضافة عملية شراء"
   },
   "permissions": {
     "owner": "مالك",
@@ -81,5 +93,36 @@
   "errors": {
     "invalidCredentials": "بيانات الاعتماد غير صحيحة",
     "accessDenied": "تم رفض الوصول"
+  },
+  "success": {
+    "saleRecorded": "تم تسجيل عملية البيع بنجاح.",
+    "purchaseRecorded": "تم تسجيل عملية الشراء بنجاح."
+  },
+  "globalSearch": {
+    "openButton": "بحث",
+    "title": "بحث في البيانات",
+    "subtitle": "ابحث عن الفواتير فورًا حسب البائع أو المشتري أو الرقم أو التاريخ.",
+    "close": "إغلاق البحث",
+    "fields": {
+      "searchTerm": "بحث شامل",
+      "invoiceNumber": "رقم الفاتورة",
+      "sellerName": "اسم البائع",
+      "buyerName": "اسم المشتري",
+      "saleDate": "يوم محدد",
+      "startDate": "من تاريخ",
+      "endDate": "إلى تاريخ"
+    },
+    "placeholders": {
+      "searchTerm": "اكتب للبحث في الفواتير والملاحظات والعناصر",
+      "invoiceNumber": "مثال: INV-2023-1002",
+      "sellerName": "اسم البائع",
+      "buyerName": "اسم المشتري"
+    },
+    "resultsHeading": "تم العثور على {{count}} نتيجة",
+    "empty": "لا توجد نتائج مطابقة. جرّب تعديل عوامل التصفية.",
+    "matches": {
+      "lineItems": "عناصر مطابقة",
+      "notes": "ملاحظات مطابقة"
+    }
   }
 }

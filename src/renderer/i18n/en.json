@@ -1,15 +1,27 @@
 {
   "appTitle": "Sales and Purchase Tracker",
+  "app": {
+    "title": "Sales Management",
+    "navigation": "Main navigation"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "sales": "Sales",
+    "purchases": "Purchases"
+  },
   "login": {
+    "title": "Login",
     "username": "Username",
     "password": "Password",
-    "loginButton": "Login",
+    "submit": "Sign in",
+    "error": "Unable to sign in. Please check your credentials.",
     "forgotPassword": "Forgot Password?"
   },
   "dashboard": {
+    "title": "Dashboard",
     "welcome": "Welcome to the Dashboard",
-    "salesOverview": "Sales Overview",
-    "purchasesOverview": "Purchases Overview"
+    "sales": "Sales",
+    "purchases": "Purchases"
   },
   "sales": {
     "title": "Sales & Invoices",
@@ -64,12 +76,15 @@
     "notesLabel": "Notes"
   },
   "purchases": {
+    "title": "Purchases",
     "recordPurchase": "Record Purchase",
     "purchaseDate": "Purchase Date",
     "supplier": "Supplier",
     "itemType": "Item Type",
     "amount": "Amount",
-    "submit": "Submit"
+    "submit": "Submit",
+    "buyer": "Buyer",
+    "add": "Add purchase"
   },
   "permissions": {
     "owner": "Owner",
@@ -83,5 +98,32 @@
   "success": {
     "saleRecorded": "Sale recorded successfully.",
     "purchaseRecorded": "Purchase recorded successfully."
+  },
+  "globalSearch": {
+    "openButton": "Search",
+    "title": "Search your data",
+    "subtitle": "Find invoices instantly by seller, buyer, number or date.",
+    "close": "Close search",
+    "fields": {
+      "searchTerm": "Search everything",
+      "invoiceNumber": "Invoice number",
+      "sellerName": "Seller name",
+      "buyerName": "Buyer name",
+      "saleDate": "Specific day",
+      "startDate": "From date",
+      "endDate": "To date"
+    },
+    "placeholders": {
+      "searchTerm": "Type to search across invoices, notes and items",
+      "invoiceNumber": "e.g. INV-2023-1002",
+      "sellerName": "Seller name",
+      "buyerName": "Buyer name"
+    },
+    "resultsHeading": "{{count}} results found",
+    "empty": "No matches found. Try adjusting your filters.",
+    "matches": {
+      "lineItems": "Matching items",
+      "notes": "Matching notes"
+    }
   }
 }
