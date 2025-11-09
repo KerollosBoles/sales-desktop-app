@@ -124,6 +124,8 @@ public partial class SellWindow : Window
 
                 var item = db.Items.First(i => i.Id == l.ItemId);
                 item.Quantity -= l.Quantity;
+                // update last sold timestamp for this item
+                item.LastSoldAt = DateTime.UtcNow;
             }
 
             db.SaveChanges();

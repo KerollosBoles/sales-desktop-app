@@ -1,0 +1,41 @@
+<Window x:Class="Shop.Presentation.SuppliersWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="الموردين" Height="400" Width="700" FlowDirection="RightToLeft">
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Right">
+            <Button x:Name="AddSupplierBtn" Width="120" Margin="6" Click="AddSupplierBtn_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Assets/icon_add.png" Width="18" Height="18" Margin="0,0,6,0" />
+                    <TextBlock Text="إضافة مورد" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="RefreshBtn" Width="120" Margin="6" Click="RefreshBtn_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Assets/icon_refresh.png" Width="18" Height="18" Margin="0,0,6,0" />
+                    <TextBlock Text="تحديث" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <DataGrid x:Name="SuppliersGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" RowHeaderWidth="0" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="المعرف" Binding="{Binding Id}" Width="60" />
+                <DataGridTextColumn Header="الاسم" Binding="{Binding Name}" Width="*" />
+                <DataGridTextColumn Header="الهاتف" Binding="{Binding Phone}" Width="140" />
+                <DataGridTextColumn Header="المدينة" Binding="{Binding Location}" Width="140" />
+                <DataGridTextColumn Header="العنوان" Binding="{Binding Address}" Width="180" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
+            <Button Width="120" Margin="6" Click="CloseBtn_Click">إغلاق</Button>
+        </StackPanel>
+    </Grid>
+</Window>

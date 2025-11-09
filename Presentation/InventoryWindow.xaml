@@ -27,6 +27,11 @@
                     <TextBlock Text="التجار" />
                 </StackPanel>
             </Button>
+            <Button x:Name="SuppliersBtn" Width="120" Margin="6" Click="SuppliersBtn_Click">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="الموردين" />
+                </StackPanel>
+            </Button>
             <Button x:Name="SalesBtn" Width="120" Margin="6" Click="SalesBtn_Click">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="المبيعات" />
@@ -39,7 +44,7 @@
                 <DataGridTextColumn Header="المعرف" Binding="{Binding Id}" Width="60" />
                 <DataGridTextColumn Header="اسم" Binding="{Binding Name}" Width="*" />
                 <DataGridTextColumn Header="الماركة" Binding="{Binding Brand}" Width="120" />
-                <DataGridTextColumn Header="المورد" Binding="{Binding Supplier}" Width="120" />
+                <DataGridTextColumn Header="المورد" Binding="{Binding Supplier.Name}" Width="120" />
                 <DataGridTextColumn Header="النوع" Binding="{Binding TireModel}" Width="120" />
                 <DataGridTextColumn Header="الكمية" Binding="{Binding Quantity}" Width="80" />
                 <DataGridTextColumn Header="تاريخ الشراء" Binding="{Binding PurchaseDate}" Width="140" />
