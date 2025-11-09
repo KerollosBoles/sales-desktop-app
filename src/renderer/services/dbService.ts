@@ -9,7 +9,7 @@ import { PurchaseOrderEntity, PurchaseSnapshot } from '../../models/purchase-ord
 
 let connection: Connection | null = null;
 
-const ensureConnection = async (): Promise<Connection> => {
+export const ensureConnection = async (): Promise<Connection> => {
     if (connection?.isConnected) {
         return connection;
     }
@@ -24,6 +24,11 @@ const toUserSummary = (user: UserEntity): UserSummary => ({
     role: user.role,
     fullName: user.fullName ?? undefined,
     phone: user.phone ?? undefined,
+    companyName: user.companyName ?? undefined,
+    canIssueInvoices: Boolean(user.canIssueInvoices),
+    canManageInventory: Boolean(user.canManageInventory),
+    canManageTeam: Boolean(user.canManageTeam),
+    managedById: user.managedBy?.id ?? undefined,
 });
 
 const toImporterSummary = (importer?: ImporterEntity | null): ImporterSummary | undefined => {

@@ -7,7 +7,8 @@
   "nav": {
     "dashboard": "الرئيسية",
     "sales": "المبيعات",
-    "purchases": "المشتريات"
+    "purchases": "المشتريات",
+    "logout": "تسجيل الخروج"
   },
   "login": {
     "title": "تسجيل الدخول",
@@ -15,8 +16,61 @@
     "username": "اسم المستخدم",
     "password": "كلمة المرور",
     "submit": "تسجيل الدخول",
-    "error": "تعذر تسجيل الدخول، يرجى التحقق من البيانات.",
-    "forgotPassword": "نسيت كلمة المرور؟"
+    "authenticating": "جارٍ التحقق من الهوية...",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
+    "createAccount": "إنشاء حساب جديد",
+    "sessionSecurity": "جلسات الدخول محمية ببصمة الجهاز.",
+    "support": "هل تحتاج مساعدة؟",
+    "securityTitle": "دخول موثوق",
+    "securitySubtitle": "نحمي كل عملية تسجيل دخول ونحافظ على تزامن فريقك.",
+    "security": {
+      "audit": "سجل نشاط مباشر",
+      "auditDescription": "يتم تسجيل كل دخول وخروج وتعديل مستخدم تلقائيًا.",
+      "roles": "صلاحيات حسب الدور",
+      "rolesDescription": "يتمتع المالك والشريك بالتحكم الكامل بينما يركز الموظفون على الفواتير فقط.",
+      "team": "متوافق مع الشركاء",
+      "teamDescription": "ادعُ فريقك بأمان وتحكم في الصلاحيات بسهولة."
+    }
+  },
+  "register": {
+    "title": "إنشاء مساحة العمل",
+    "subtitle": "اختر نوع الحساب الرئيسي ويمكنك إضافة الفريق لاحقًا.",
+    "roleLabel": "نوع الحساب",
+    "roles": {
+      "owner": {
+        "title": "مالك",
+        "description": "تحكم كامل مع صلاحية إدارة المخزون والفريق."
+      },
+      "partner": {
+        "title": "شريك",
+        "description": "تحكم مشترك وصلاحية إنشاء حسابات الموظفين."
+      }
+    },
+    "fullName": "الاسم الكامل",
+    "fullNamePlaceholder": "اسم صاحب الحساب",
+    "companyName": "اسم المؤسسة",
+    "companyPlaceholder": "الاسم التجاري أو المعرض",
+    "phone": "رقم الهاتف",
+    "phonePlaceholder": "هاتف التواصل",
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "submit": "إنشاء الحساب",
+    "submitting": "جاري تجهيز الحساب...",
+    "securityHint": "يتم تشفير كلمات المرور بمعايير عالية.",
+    "haveAccount": "هل لديك حساب بالفعل؟",
+    "backToLogin": "العودة لتسجيل الدخول",
+    "securityTitle": "حماية احترافية",
+    "securitySubtitle": "بياناتك مشفرة مع سجل تدقيق وصلاحيات دقيقة للفريق.",
+    "security": {
+      "passwords": "تشفير قوي",
+      "passwordsDescription": "يتم تشفير بيانات الدخول بخوارزميات حديثة.",
+      "audit": "سجل كامل",
+      "auditDescription": "تابع كل التغييرات في جدول زمني واضح.",
+      "team": "تحكم ذكي بالفريق",
+      "teamDescription": "امنح الموظفين صلاحية الفواتير دون كشف المخزون."
+    }
   },
   "dashboard": {
     "title": "لوحة التحكم",
@@ -27,6 +81,43 @@
     "purchases": "المشتريات",
     "purchasesDescription": "سجل المخزون الوارد واحتفظ بنشاط الموردين منظمًا.",
     "open": "فتح"
+  },
+  "team": {
+    "heading": "إدارة الفريق",
+    "membersCount": "{{count}} عضو في الفريق",
+    "inviteTitle": "دعوة الموظفين",
+    "inviteSubtitle": "يمكن للموظفين استخراج الفواتير فقط دون رؤية المخزون.",
+    "fullName": "الاسم الكامل",
+    "fullNamePlaceholder": "اسم الموظف (اختياري)",
+    "username": "اسم المستخدم",
+    "phone": "رقم الهاتف",
+    "password": "كلمة مرور مؤقتة",
+    "create": "إنشاء موظف",
+    "creating": "جارٍ الإنشاء...",
+    "permissionHint": "صلاحيات الموظفين تقتصر على الفواتير، المخزن مخفي عنهم.",
+    "membersTitle": "أعضاء الفريق",
+    "invoiceAccess": "فواتير فقط",
+    "restrictedInventory": "المخزون مخفي",
+    "empty": "لا يوجد موظفون حتى الآن، ابدأ بدعوة أول موظف.",
+    "success": "تمت إضافة الموظف بنجاح.",
+    "activityTitle": "سجل الأمان",
+    "activityEmpty": "لا يوجد نشاط حتى الآن.",
+    "refreshActivity": "تحديث سجل الأمان",
+    "activity": {
+      "account": {
+        "registered": "تم إنشاء مساحة العمل"
+      },
+      "auth": {
+        "login": "تسجيل دخول ناجح",
+        "logout": "تم تسجيل الخروج"
+      },
+      "security": {
+        "failed_login": "محاولة دخول فاشلة للمستخدم {{username}}"
+      },
+      "team": {
+        "create_employee": "تمت دعوة موظف جديد ({{employeeUsername}})"
+      }
+    }
   },
   "sales": {
     "title": "المبيعات والفواتير",
@@ -117,8 +208,14 @@
   },
   "permissions": {
     "owner": "مالك",
+    "partner": "شريك",
     "employee": "موظف",
     "accessRights": "حقوق الوصول"
+  },
+  "roles": {
+    "owner": "مالك",
+    "partner": "شريك",
+    "employee": "موظف"
   },
   "errors": {
     "invalidCredentials": "بيانات الاعتماد غير صحيحة",
@@ -127,6 +224,15 @@
   "success": {
     "saleRecorded": "تم تسجيل عملية البيع بنجاح.",
     "purchaseRecorded": "تم تسجيل عملية الشراء بنجاح."
+  },
+  "auth": {
+    "passwordsDoNotMatch": "كلمتا المرور غير متطابقتين.",
+    "usernameTaken": "اسم المستخدم مستخدم بالفعل.",
+    "invalidCredentials": "اسم المستخدم أو كلمة المرور غير صحيحة.",
+    "genericError": "حدث خطأ غير متوقع، حاول مرة أخرى.",
+    "managerNotFound": "تعذر العثور على حساب المالك.",
+    "managerPrivilegesRequired": "فقط المالك أو الشريك يمكنه إنشاء حسابات الموظفين.",
+    "sessionMissing": "انتهت الجلسة، يرجى تسجيل الدخول مجددًا."
   },
   "globalSearch": {
     "openButton": "بحث",

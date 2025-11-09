@@ -31,6 +31,10 @@ const sellerCatalog: UserSummary[] = [
         role: 'owner',
         fullName: 'Ahmed Issa',
         phone: '+20 111 222 1111',
+        companyName: 'Issa Auto Group',
+        canIssueInvoices: true,
+        canManageInventory: true,
+        canManageTeam: true,
     },
     {
         id: 'seller-salma',
@@ -38,6 +42,11 @@ const sellerCatalog: UserSummary[] = [
         role: 'employee',
         fullName: 'Salma Fouad',
         phone: '+20 155 444 2020',
+        companyName: 'Issa Auto Group',
+        canIssueInvoices: true,
+        canManageInventory: false,
+        canManageTeam: false,
+        managedById: 'seller-ahmed',
     },
 ];
 

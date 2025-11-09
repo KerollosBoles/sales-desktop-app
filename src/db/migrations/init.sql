@@ -31,11 +31,28 @@ CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    role VARCHAR(20) NOT NULL CHECK (role IN ('owner', 'employee')),
+    role VARCHAR(20) NOT NULL CHECK (role IN ('owner', 'partner', 'employee')),
+    managed_by UUID REFERENCES users(id) ON DELETE SET NULL,
     full_name VARCHAR(150),
     phone VARCHAR(30),
+    company_name VARCHAR(180),
+    can_issue_invoices BOOLEAN NOT NULL DEFAULT TRUE,
+    can_manage_inventory BOOLEAN NOT NULL DEFAULT FALSE,
+    can_manage_team BOOLEAN NOT NULL DEFAULT FALSE,
+    last_login_at TIMESTAMP WITH TIME ZONE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT employees_require_manager CHECK (
+        role <> 'employee' OR managed_by IS NOT NULL
+    )
+);
+
+CREATE TABLE IF NOT EXISTS user_activity_logs (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    activity_type VARCHAR(40) NOT NULL,
+    activity_context JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS tires (

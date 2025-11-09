@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Icon from '../components/Icon';
+import TeamPanel from '../components/TeamPanel';
 import './Dashboard.css';
 
 const Dashboard: React.FC = () => {
@@ -51,6 +52,7 @@ const Dashboard: React.FC = () => {
                     </Link>
                 ))}
             </section>
+            <TeamPanel />
         </div>
     );
 };

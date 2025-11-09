@@ -184,6 +184,20 @@ select:focus {
     background: #dc2626;
 }
 
+.button--text {
+    background: transparent;
+    border: none;
+    color: var(--color-primary-strong);
+    padding: 0;
+    font-weight: 600;
+}
+
+.button--text:hover,
+.button--text:focus {
+    text-decoration: underline;
+    outline: none;
+}
+
 .icon-button {
     display: inline-flex;
     align-items: center;
