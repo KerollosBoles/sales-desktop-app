@@ -1,0 +1,17 @@
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\bin\Release\net7.0\Shop.Data.deps.json
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\bin\Release\net7.0\Shop.Data.runtimeconfig.json
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\bin\Release\net7.0\Shop.Data.dll
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\bin\Release\net7.0\Shop.Data.pdb
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\bin\Release\net7.0\Shop.Core.dll
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\bin\Release\net7.0\Shop.Core.pdb
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\obj\Release\net7.0\Shop.Data.csproj.AssemblyReference.cache
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\obj\Release\net7.0\Shop.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\obj\Release\net7.0\Shop.Data.AssemblyInfoInputs.cache
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\obj\Release\net7.0\Shop.Data.AssemblyInfo.cs
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\obj\Release\net7.0\Shop.Data.csproj.CoreCompileInputs.cache
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\obj\Release\net7.0\Shop.Data.csproj.Up2Date
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\obj\Release\net7.0\Shop.Data.dll
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\obj\Release\net7.0\refint\Shop.Data.dll
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\obj\Release\net7.0\Shop.Data.pdb
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\obj\Release\net7.0\Shop.Data.genruntimeconfig.cache
+C:\Users\Kerollos\Desktop\sales-desktop-app\Data\obj\Release\net7.0\ref\Shop.Data.dll

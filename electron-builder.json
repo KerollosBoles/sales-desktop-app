@@ -1,0 +1,42 @@
+{
+  "appId": "com.salesdesktopapp",
+  "productName": "Sales Desktop App",
+  "version": "1.0.0",
+  "description": "A desktop application for recording sales and purchase activities.",
+  "main": "dist/main/main.js",
+  "files": [
+    "dist/**/*",
+    "src/**/*",
+    "package.json"
+  ],
+  "directories": {
+    "output": "build"
+  },
+  "linux": {
+    "target": [
+      "AppImage",
+      "deb"
+    ],
+    "category": "Utility"
+  },
+  "mac": {
+    "target": [
+      "dmg",
+      "zip"
+    ],
+    "category": "public.app-category.utilities"
+  },
+  "win": {
+    "target": [
+      "nsis"
+    ],
+    "icon": "build/icon.ico"
+  },
+  "publish": {
+    "provider": "generic",
+    "url": "https://your-update-server.com/"
+  },
+  "extraMetadata": {
+    "homepage": "https://your-app-homepage.com"
+  }
+}

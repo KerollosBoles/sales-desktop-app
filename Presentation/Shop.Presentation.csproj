@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Application icon and Windows native icon for published exe -->
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <Win32Icon>app.ico</Win32Icon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Shop.Core.csproj" />
+    <ProjectReference Include="..\Data\Shop.Data.csproj" />
+    <!-- Include the icon in the project so it's available at build/publish time -->
+    <None Include="app.ico">
+      <Pack>true</Pack>
+      <Visible>false</Visible>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- Include UI assets (icons/images) -->
+  <ItemGroup>
+    <Content Include="Assets\**\*.*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="QuestPDF" Version="2024.12.0" />
+  </ItemGroup>
+</Project>

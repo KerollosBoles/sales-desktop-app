@@ -1,0 +1,11 @@
+C:\Users\Kerollos\Desktop\sales-desktop-app\Core\bin\Release\net7.0\Shop.Core.deps.json
+C:\Users\Kerollos\Desktop\sales-desktop-app\Core\bin\Release\net7.0\Shop.Core.dll
+C:\Users\Kerollos\Desktop\sales-desktop-app\Core\bin\Release\net7.0\Shop.Core.pdb
+C:\Users\Kerollos\Desktop\sales-desktop-app\Core\obj\Release\net7.0\Shop.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Kerollos\Desktop\sales-desktop-app\Core\obj\Release\net7.0\Shop.Core.AssemblyInfoInputs.cache
+C:\Users\Kerollos\Desktop\sales-desktop-app\Core\obj\Release\net7.0\Shop.Core.AssemblyInfo.cs
+C:\Users\Kerollos\Desktop\sales-desktop-app\Core\obj\Release\net7.0\Shop.Core.csproj.CoreCompileInputs.cache
+C:\Users\Kerollos\Desktop\sales-desktop-app\Core\obj\Release\net7.0\Shop.Core.dll
+C:\Users\Kerollos\Desktop\sales-desktop-app\Core\obj\Release\net7.0\refint\Shop.Core.dll
+C:\Users\Kerollos\Desktop\sales-desktop-app\Core\obj\Release\net7.0\Shop.Core.pdb
+C:\Users\Kerollos\Desktop\sales-desktop-app\Core\obj\Release\net7.0\ref\Shop.Core.dll

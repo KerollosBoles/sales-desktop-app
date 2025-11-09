@@ -1,0 +1,71 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- Palette -->
+  <Color x:Key="PrimaryColor">#FFB39DDC</Color> <!-- lavender -->
+  <Color x:Key="AccentColor">#FFF48FB1</Color> <!-- soft pink -->
+  <Color x:Key="BackgroundColor">#FFFDF6FB</Color> <!-- very light pink -->
+  <Color x:Key="TextColor">#FF333333</Color>
+
+  <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}" />
+  <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
+  <SolidColorBrush x:Key="BackgroundBrush" Color="{StaticResource BackgroundColor}" />
+  <SolidColorBrush x:Key="TextBrush" Color="{StaticResource TextColor}" />
+
+  <!-- Window style -->
+  <Style TargetType="Window">
+    <Setter Property="Background" Value="{StaticResource BackgroundBrush}" />
+    <Setter Property="FontFamily" Value="Segoe UI" />
+    <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+  </Style>
+
+  <!-- Primary button style -->
+  <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+    <Setter Property="Background" Value="{StaticResource PrimaryBrush}" />
+    <Setter Property="Foreground" Value="White" />
+    <Setter Property="Padding" Value="8,6" />
+    <Setter Property="Margin" Value="6" />
+    <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="FontSize" Value="14" />
+    <Setter Property="Cursor" Value="Hand" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Button">
+          <Border Background="{TemplateBinding Background}" CornerRadius="8" SnapsToDevicePixels="True">
+            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="6"/>
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <!-- Secondary button style -->
+  <Style x:Key="SecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+    <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+  </Style>
+
+  <!-- TextBox style -->
+  <Style TargetType="TextBox">
+    <Setter Property="Padding" Value="6" />
+    <Setter Property="Margin" Value="4" />
+    <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="FontSize" Value="14" />
+  </Style>
+
+  <Style TargetType="PasswordBox">
+    <Setter Property="Padding" Value="6" />
+    <Setter Property="Margin" Value="4" />
+    <Setter Property="BorderBrush" Value="{StaticResource PrimaryBrush}" />
+    <Setter Property="BorderThickness" Value="1" />
+    <Setter Property="FontSize" Value="14" />
+  </Style>
+
+  <!-- DataGrid header style -->
+  <Style TargetType="DataGridColumnHeader">
+    <Setter Property="Background" Value="{StaticResource PrimaryBrush}" />
+    <Setter Property="Foreground" Value="White" />
+    <Setter Property="FontWeight" Value="Bold" />
+  </Style>
+
+</ResourceDictionary>

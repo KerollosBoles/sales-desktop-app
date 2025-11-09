@@ -1,0 +1,64 @@
+<Window x:Class="Shop.Presentation.InventoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="المخزن" Height="450" Width="800" FlowDirection="RightToLeft">
+    <Grid Margin="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0" HorizontalAlignment="Right">
+            <Button x:Name="AddItemBtn" Width="120" Margin="6" Click="AddItemBtn_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Assets/icon_add.png" Width="18" Height="18" Margin="0,0,6,0" />
+                    <TextBlock Text="إضافة صنف" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="RefreshBtn" Width="120" Margin="6" Click="RefreshBtn_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Assets/icon_refresh.png" Width="18" Height="18" Margin="0,0,6,0" />
+                    <TextBlock Text="تحديث" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="MerchantsBtn" Width="120" Margin="6" Click="MerchantsBtn_Click">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="التجار" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="SalesBtn" Width="120" Margin="6" Click="SalesBtn_Click">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="المبيعات" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <DataGrid x:Name="ItemsGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True" RowHeaderWidth="0" CanUserAddRows="False" Background="White">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="المعرف" Binding="{Binding Id}" Width="60" />
+                <DataGridTextColumn Header="اسم" Binding="{Binding Name}" Width="*" />
+                <DataGridTextColumn Header="الماركة" Binding="{Binding Brand}" Width="120" />
+                <DataGridTextColumn Header="المورد" Binding="{Binding Supplier}" Width="120" />
+                <DataGridTextColumn Header="النوع" Binding="{Binding TireModel}" Width="120" />
+                <DataGridTextColumn Header="الكمية" Binding="{Binding Quantity}" Width="80" />
+                <DataGridTextColumn Header="تاريخ الشراء" Binding="{Binding PurchaseDate}" Width="140" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Right">
+            <Button x:Name="SellBtn" Style="{StaticResource PrimaryButtonStyle}" Width="120" Click="SellBtn_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Assets/icon_sell.png" Width="18" Height="18" Margin="0,0,6,0" />
+                    <TextBlock Text="بيع" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="PrintBtn" Style="{StaticResource SecondaryButtonStyle}" Width="140" Click="PrintBtn_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Assets/icon_print.png" Width="18" Height="18" Margin="0,0,6,0" />
+                    <TextBlock Text="طباعة فاتورة" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

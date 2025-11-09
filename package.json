@@ -1,0 +1,50 @@
+{
+  "name": "sales-desktop-app",
+  "version": "1.0.0",
+  "description": "A desktop application for recording sales and purchase activities.",
+  "main": "src/main/main.ts",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "dev": "webpack --mode development",
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "electron",
+    "react",
+    "sales",
+    "purchases"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^latest",
+    "react": "^latest",
+    "react-dom": "^latest",
+    "redux": "^latest",
+    "react-redux": "^latest",
+    "i18next": "^latest",
+    "i18next-http-backend": "^latest",
+    "i18next-browser-languagedetector": "^latest"
+  },
+  "devDependencies": {
+    "typescript": "^latest",
+    "webpack": "^latest",
+    "webpack-cli": "^latest",
+    "eslint": "^latest",
+    "babel-loader": "^latest",
+    "css-loader": "^latest",
+    "style-loader": "^latest"
+  },
+  "build": {
+    "appId": "com.yourname.salesdesktopapp",
+    "productName": "Sales Desktop App",
+    "files": [
+      "dist/**/*",
+      "src/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    }
+  }
+}

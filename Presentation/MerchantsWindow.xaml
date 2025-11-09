@@ -1,0 +1,24 @@
+<Window x:Class="Shop.Presentation.MerchantsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="التجار" Height="380" Width="600" FlowDirection="RightToLeft">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,10">
+            <Button x:Name="AddMerchantBtn" Width="120" Click="AddMerchantBtn_Click">إضافة تاجر</Button>
+            <Button x:Name="RefreshBtn" Width="100" Margin="8,0,0,0" Click="RefreshBtn_Click">تحديث</Button>
+        </StackPanel>
+
+        <DataGrid x:Name="MerchantsGrid" Grid.Row="1" AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="الاسم" Binding="{Binding Name}" />
+                <DataGridTextColumn Header="الهاتف" Binding="{Binding Phone}" />
+                <DataGridTextColumn Header="المكان" Binding="{Binding Location}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

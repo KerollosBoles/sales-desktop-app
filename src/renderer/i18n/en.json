@@ -1,0 +1,43 @@
+{
+  "appTitle": "Sales and Purchase Tracker",
+  "login": {
+    "username": "Username",
+    "password": "Password",
+    "loginButton": "Login",
+    "forgotPassword": "Forgot Password?"
+  },
+  "dashboard": {
+    "welcome": "Welcome to the Dashboard",
+    "salesOverview": "Sales Overview",
+    "purchasesOverview": "Purchases Overview"
+  },
+  "sales": {
+    "recordSale": "Record Sale",
+    "saleDate": "Sale Date",
+    "buyer": "Buyer",
+    "itemType": "Item Type",
+    "amount": "Amount",
+    "submit": "Submit"
+  },
+  "purchases": {
+    "recordPurchase": "Record Purchase",
+    "purchaseDate": "Purchase Date",
+    "supplier": "Supplier",
+    "itemType": "Item Type",
+    "amount": "Amount",
+    "submit": "Submit"
+  },
+  "permissions": {
+    "owner": "Owner",
+    "employee": "Employee",
+    "accessRights": "Access Rights"
+  },
+  "errors": {
+    "loginFailed": "Login failed. Please check your credentials.",
+    "requiredField": "This field is required."
+  },
+  "success": {
+    "saleRecorded": "Sale recorded successfully.",
+    "purchaseRecorded": "Purchase recorded successfully."
+  }
+}

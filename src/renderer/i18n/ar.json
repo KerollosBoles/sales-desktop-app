@@ -1,0 +1,42 @@
+{
+  "login": {
+    "title": "تسجيل الدخول",
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "loginButton": "تسجيل الدخول",
+    "forgotPassword": "نسيت كلمة المرور؟"
+  },
+  "dashboard": {
+    "welcome": "مرحبًا بك في لوحة التحكم",
+    "sales": "المبيعات",
+    "purchases": "المشتريات",
+    "logout": "تسجيل الخروج"
+  },
+  "sales": {
+    "title": "المبيعات",
+    "recordSale": "تسجيل بيع",
+    "saleDate": "تاريخ البيع",
+    "buyer": "المشتري",
+    "itemType": "نوع العنصر",
+    "amount": "المبلغ",
+    "submit": "إرسال"
+  },
+  "purchases": {
+    "title": "المشتريات",
+    "recordPurchase": "تسجيل شراء",
+    "purchaseDate": "تاريخ الشراء",
+    "supplier": "المورد",
+    "itemType": "نوع العنصر",
+    "amount": "المبلغ",
+    "submit": "إرسال"
+  },
+  "permissions": {
+    "owner": "مالك",
+    "employee": "موظف",
+    "accessRights": "حقوق الوصول"
+  },
+  "errors": {
+    "invalidCredentials": "بيانات الاعتماد غير صحيحة",
+    "accessDenied": "تم رفض الوصول"
+  }
+}

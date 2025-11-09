@@ -1,0 +1,55 @@
+<Window x:Class="Shop.Presentation.AddItemWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="إضافة صنف" Height="360" Width="420" FlowDirection="RightToLeft">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="220" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="اسم الصنف" />
+                <TextBox x:Name="NameBox" />
+
+                <TextBlock Text="الماركة" Margin="0,8,0,0" />
+                <TextBox x:Name="BrandBox" />
+
+                <TextBlock Text="النوع (كاوتش)" Margin="0,8,0,0" />
+                <TextBox x:Name="TireModelBox" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Margin="12,0,0,0">
+                <TextBlock Text="الكمية" />
+                <TextBox x:Name="QuantityBox" />
+
+                <TextBlock Text="اسم المورد" Margin="0,8,0,0" />
+                <TextBox x:Name="SupplierBox" />
+
+                <TextBlock Text="هاتف المورد" Margin="0,8,0,0" />
+                <TextBox x:Name="SupplierPhoneBox" />
+
+                <TextBlock Text="تاريخ الاستيراد" Margin="0,8,0,0" />
+                <DatePicker x:Name="ImportDatePicker" />
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="7" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Style="{StaticResource PrimaryButtonStyle}" Width="120" Click="SaveBtn_Click">
+                <TextBlock Text="حفظ" HorizontalAlignment="Center" />
+            </Button>
+            <Button Style="{StaticResource SecondaryButtonStyle}" Width="120" Click="CancelBtn_Click">إلغاء</Button>
+        </StackPanel>
+    </Grid>
+</Window>
