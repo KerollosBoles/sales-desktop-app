@@ -27,15 +27,28 @@ public partial class AddItemWindow : Window
         DateTime importDate = ImportDatePicker.SelectedDate ?? DateTime.UtcNow;
 
         using var db = new ShopDbContext();
+        // try to find existing supplier by name; if not present, create it
+        Supplier? supplier = null;
+        var supplierName = SupplierBox.Text?.Trim() ?? string.Empty;
+        if (!string.IsNullOrEmpty(supplierName)) supplier = db.Suppliers.FirstOrDefault(s => s.Name == supplierName);
+        if (supplier == null && !string.IsNullOrEmpty(supplierName))
+        {
+            supplier = new Supplier { Name = supplierName, Phone = SupplierPhoneBox.Text?.Trim() ?? string.Empty };
+            db.Suppliers.Add(supplier);
+            db.SaveChanges();
+        }
+
         var it = new Item
         {
             Name = name,
             Brand = BrandBox.Text?.Trim() ?? string.Empty,
-            Supplier = SupplierBox.Text?.Trim() ?? string.Empty,
+            SupplierId = supplier?.Id,
             SupplierPhone = SupplierPhoneBox.Text?.Trim() ?? string.Empty,
             TireModel = TireModelBox.Text?.Trim() ?? string.Empty,
             Quantity = qty,
             PurchaseDate = importDate,
+            LastPurchaseDate = importDate,
+            LastPurchaseQuantity = qty,
             PurchasePrice = 0
         };
         db.Items.Add(it);

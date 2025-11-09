@@ -58,6 +58,18 @@ public static class SeedData
             db.SaveChanges();
         }
 
+        // Seed some suppliers (importers) if none exist
+        try
+        {
+            if (!db.Suppliers.Any())
+            {
+                db.Suppliers.Add(new Supplier { Name = "مستورد 1", Phone = "01220000000", Location = "الإسكندرية", Address = "شارع الاستيراد 1" });
+                db.Suppliers.Add(new Supplier { Name = "مستورد 2", Phone = "01221111111", Location = "القاهرة", Address = "شارع الواردات 2" });
+                db.SaveChanges();
+            }
+        }
+        catch { }
+
         // Migrate existing Transactions to new Invoice/InvoiceLine model if needed
         try
         {

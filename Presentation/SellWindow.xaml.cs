@@ -92,14 +92,21 @@ public partial class SellWindow : Window
             }
 
             // create invoice
-            var invoice = new Invoice
+            var invoice = new Invoice(InvoiceLabel.Text)
             {
-                InvoiceNumber = InvoiceLabel.Text,
                 Date = DateTime.UtcNow,
                 SellerName = _seller,
                 LocationSoldTo = LocationBox.Text ?? string.Empty,
                 MerchantId = (MerchantBox.SelectedItem as Merchant)?.Id
             };
+            // try to set SellerId by resolving username from accounts DB (logical link)
+            try
+            {
+                using var adb = new AccountsDbContext();
+                var sellerUser = adb.Users.FirstOrDefault(u => u.Username == _seller);
+                if (sellerUser != null) invoice.SellerId = sellerUser.Id;
+            }
+            catch { }
             db.Invoices.Add(invoice);
             db.SaveChanges();
 

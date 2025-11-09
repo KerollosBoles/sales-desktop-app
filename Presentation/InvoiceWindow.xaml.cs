@@ -30,13 +30,15 @@ public partial class InvoiceWindow : Window
     private void LoadInvoice()
     {
         using var db = new ShopDbContext();
-        _invoice = db.Invoices.Where(i => i.Id == _invoiceId)
-            .Select(i => new Invoice
+        // load invoice with related data
+        _invoice = db.Invoices
+            .Where(i => i.Id == _invoiceId)
+            .Select(i => new Invoice(i.InvoiceNumber)
             {
                 Id = i.Id,
-                InvoiceNumber = i.InvoiceNumber,
                 Date = i.Date,
                 SellerName = i.SellerName,
+                SellerId = i.SellerId,
                 LocationSoldTo = i.LocationSoldTo,
                 Merchant = db.Merchants.FirstOrDefault(m => m.Id == i.MerchantId),
                 InvoiceLines = db.InvoiceLines.Where(l => l.InvoiceId == i.Id).Select(l => new InvoiceLine {
@@ -53,6 +55,18 @@ public partial class InvoiceWindow : Window
             MessageBox.Show("تعذر العثور على الفاتورة.", "خطأ", MessageBoxButton.OK, MessageBoxImage.Error);
             Close();
             return;
+        }
+
+        // if there is a SellerId, try to load the seller name from accounts DB
+        if (_invoice != null && _invoice.SellerId.HasValue)
+        {
+            try
+            {
+                using var adb = new AccountsDbContext();
+                var seller = adb.Users.FirstOrDefault(u => u.Id == _invoice.SellerId.Value);
+                if (seller != null) _invoice.SellerName = seller.Username;
+            }
+            catch { }
         }
 
         var doc = BuildFlowDocument(_invoice);

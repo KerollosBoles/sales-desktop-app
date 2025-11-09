@@ -1,9 +1,9 @@
-using System;
 using System.Collections.Generic;
+using System;
 
 namespace Shop.Core.Models;
 
-public class Merchant
+public class Supplier
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
@@ -12,6 +12,5 @@ public class Merchant
     public string Address { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    // Invoices (sales) made to this merchant
-    public List<Invoice> Invoices { get; set; } = new();
+    public List<Item> Items { get; set; } = new();
 }

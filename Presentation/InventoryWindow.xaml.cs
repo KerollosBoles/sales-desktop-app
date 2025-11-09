@@ -34,7 +34,23 @@ public partial class InventoryWindow : Window
     private void LoadItems()
     {
         using var db = new ShopDbContext();
-        var items = db.Items.OrderBy(i => i.Name).ToList();
+        // include supplier info and compute last sold date from invoice lines
+        var items = db.Items
+            .OrderBy(i => i.Name)
+            .Select(i => new
+            {
+                Item = i,
+                Supplier = db.Suppliers.FirstOrDefault(s => s.Id == i.SupplierId),
+                LastSold = db.InvoiceLines.Where(l => l.ItemId == i.Id).Join(db.Invoices, l => l.InvoiceId, inv => inv.Id, (l, inv) => inv.Date).OrderByDescending(d => d).FirstOrDefault()
+            }).ToList()
+            .Select(x =>
+            {
+                // attach supplier name into a small view-model on the fly
+                x.Item.Supplier = x.Supplier;
+                x.Item.LastSoldAt = x.LastSold == default(DateTime) ? null : (DateTime?)x.LastSold;
+                return x.Item;
+            }).ToList();
+
         ItemsGrid.ItemsSource = items;
     }
 

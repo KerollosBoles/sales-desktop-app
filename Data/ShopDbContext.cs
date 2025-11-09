@@ -12,6 +12,7 @@ public class ShopDbContext : DbContext
     public DbSet<Merchant> Merchants { get; set; }
     public DbSet<Invoice> Invoices { get; set; }
     public DbSet<InvoiceLine> InvoiceLines { get; set; }
+    public DbSet<Supplier> Suppliers { get; set; }
 
     private string DbPath
     {
@@ -37,12 +38,19 @@ public class ShopDbContext : DbContext
             b.HasKey(i => i.Id);
             b.HasIndex(i => i.InvoiceNumber).IsUnique(false);
             b.HasMany(i => i.InvoiceLines).WithOne(l => l.Invoice).HasForeignKey(l => l.InvoiceId).OnDelete(DeleteBehavior.Cascade);
+            b.HasOne<Merchant>().WithMany(m => m.Invoices).HasForeignKey(i => i.MerchantId).OnDelete(DeleteBehavior.SetNull);
         });
 
         modelBuilder.Entity<InvoiceLine>(b =>
         {
             b.HasKey(l => l.Id);
             b.HasOne(l => l.Item).WithMany().HasForeignKey(l => l.ItemId);
+        });
+
+        modelBuilder.Entity<Supplier>(b =>
+        {
+            b.HasKey(s => s.Id);
+            b.HasMany(s => s.Items).WithOne(i => i.Supplier).HasForeignKey(i => i.SupplierId).OnDelete(DeleteBehavior.SetNull);
         });
     }
 }
