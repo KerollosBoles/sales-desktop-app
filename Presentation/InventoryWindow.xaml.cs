@@ -96,6 +96,13 @@ public partial class InventoryWindow : Window
         w.ShowDialog();
     }
 
+    private void SuppliersBtn_Click(object sender, RoutedEventArgs e)
+    {
+        var w = new SuppliersWindow();
+        w.Owner = this;
+        w.ShowDialog();
+    }
+
     private void SalesBtn_Click(object sender, RoutedEventArgs e)
     {
         var w = new SalesWindow();
