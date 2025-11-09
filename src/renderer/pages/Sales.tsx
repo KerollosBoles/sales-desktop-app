@@ -1,17 +1,51 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Invoice, InvoiceLineItem } from '../../models/invoice';
+import { Invoice, InvoiceRecord } from '../../models/invoice';
+import { InvoiceLineItemDetail } from '../../models/invoice-line-item';
+import { ImporterSummary } from '../../models/importer';
+import { MerchantSummary } from '../../models/merchant';
+import { TireSnapshot } from '../../models/tire';
+import { UserSummary } from '../../models/user';
 import { deleteInvoice, loadInvoices, saveInvoice } from '../services/invoiceStorage';
+import {
+    findMerchantById,
+    findSellerById,
+    findTireById,
+    getImporterCatalog,
+    getMerchantCatalog,
+    getSellerCatalog,
+    getTireCatalog,
+} from '../services/relationshipCatalog';
 import Icon from '../components/Icon';
 import './Sales.css';
+
+interface LineItemFormState {
+    id: string;
+    tireId: string;
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    remainingQuantity: number;
+    hasRemainingStock: boolean;
+    lastPurchaseAt?: string;
+    lastSaleAt?: string;
+}
 
 interface InvoiceFormState {
     invoiceNumber: string;
     saleDate: string;
-    sellerName: string;
-    buyerName: string;
+    sellerId: string;
+    buyer: {
+        id: string;
+        code: string;
+        name: string;
+        phone?: string;
+        address?: string;
+        location?: string;
+        email?: string;
+    };
     notes: string;
-    lineItems: InvoiceLineItem[];
+    lineItems: LineItemFormState[];
 }
 
 interface InvoiceFilters {
@@ -19,88 +53,166 @@ interface InvoiceFilters {
     saleDate: string;
     startDate: string;
     endDate: string;
-    sellerName: string;
-    buyerName: string;
-    invoiceNumber: string;
+    buyerId: string;
+    sellerId: string;
+    importerId: string;
+    tireId: string;
 }
-
-const createLineItem = (): InvoiceLineItem => ({
-    id: `line-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-    description: '',
-    quantity: 1,
-    unitPrice: 0,
-});
 
 const generateInvoiceNumber = () => {
     const now = new Date();
     const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(
-        now.getDate()
+        now.getDate(),
     ).padStart(2, '0')}`;
-    const timePart = `${now.getHours()}${now.getMinutes()}${now.getSeconds()}`;
+    const timePart = `${now.getHours()}${String(now.getMinutes()).padStart(2, '0')}${String(
+        now.getSeconds(),
+    ).padStart(2, '0')}`;
     return `INV-${datePart}-${timePart}`;
 };
 
-const calculateTotalAmount = (items: InvoiceLineItem[]) =>
-    items.reduce((total, item) => total + item.quantity * item.unitPrice, 0);
+const createLineItem = (defaultTire?: TireSnapshot): LineItemFormState => ({
+    id: `line-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    tireId: defaultTire?.id ?? '',
+    description: defaultTire ? `${defaultTire.brand}${defaultTire.model ? ` ${defaultTire.model}` : ''}` : '',
+    quantity: 1,
+    unitPrice: defaultTire?.suggestedSalePrice ?? 0,
+    remainingQuantity: defaultTire?.quantityOnHand ?? 0,
+    hasRemainingStock: defaultTire?.hasRemainingStock ?? true,
+    lastPurchaseAt: defaultTire?.lastPurchaseAt,
+    lastSaleAt: defaultTire?.lastSaleAt,
+});
+
+const normalizeBuyer = (merchant?: MerchantSummary) =>
+    merchant
+        ? {
+              id: merchant.id,
+              code: merchant.merchantCode,
+              name: merchant.displayName,
+              phone: merchant.phone,
+              address: merchant.address,
+              location: merchant.city,
+              email: merchant.email,
+          }
+        : {
+              id: '',
+              code: '',
+              name: '',
+          };
+
+const currencyFormat = (value: number) =>
+    value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const Sales: React.FC = () => {
     const { t } = useTranslation();
-    const [invoices, setInvoices] = useState<Invoice[]>([]);
-    const [formState, setFormState] = useState<InvoiceFormState>({
+    const [invoices, setInvoices] = useState<InvoiceRecord[]>([]);
+    const [selectedInvoiceId, setSelectedInvoiceId] = useState<string | null>(null);
+    const sellerCatalog = useMemo(() => getSellerCatalog(), []);
+    const merchantCatalog = useMemo(() => getMerchantCatalog(), []);
+    const importerCatalog = useMemo(() => getImporterCatalog(), []);
+    const tireCatalog = useMemo(() => getTireCatalog(), []);
+
+    const [formState, setFormState] = useState<InvoiceFormState>(() => ({
         invoiceNumber: generateInvoiceNumber(),
         saleDate: new Date().toISOString().slice(0, 10),
-        sellerName: '',
-        buyerName: '',
+        sellerId: sellerCatalog[0]?.id ?? '',
+        buyer: normalizeBuyer(merchantCatalog[0]),
         notes: '',
-        lineItems: [createLineItem()],
-    });
+        lineItems: [createLineItem(tireCatalog[0])],
+    }));
+
     const [filters, setFilters] = useState<InvoiceFilters>({
         searchTerm: '',
         saleDate: '',
         startDate: '',
         endDate: '',
-        sellerName: '',
-        buyerName: '',
-        invoiceNumber: '',
+        buyerId: '',
+        sellerId: '',
+        importerId: '',
+        tireId: '',
     });
 
     useEffect(() => {
-        setInvoices(loadInvoices());
+        const stored = loadInvoices();
+        setInvoices(stored);
+        setSelectedInvoiceId(stored[0]?.id ?? null);
     }, []);
 
-    const resetForm = () => {
-        setFormState({
-            invoiceNumber: generateInvoiceNumber(),
-            saleDate: new Date().toISOString().slice(0, 10),
-            sellerName: '',
-            buyerName: '',
-            notes: '',
-            lineItems: [createLineItem()],
-        });
+    const handleBuyerChange = (buyerId: string) => {
+        const merchant = findMerchantById(buyerId) ?? merchantCatalog.find((m) => m.id === buyerId);
+        setFormState((prev) => ({
+            ...prev,
+            buyer: normalizeBuyer(merchant),
+        }));
     };
 
-    const handleLineItemChange = (id: string, field: keyof InvoiceLineItem, value: string) => {
+    const handleBuyerFieldChange = (field: keyof InvoiceFormState['buyer']) =>
+        (event: React.ChangeEvent<HTMLInputElement>) => {
+            const value = event.target.value;
+            setFormState((prev) => ({
+                ...prev,
+                buyer: {
+                    ...prev.buyer,
+                    [field]: value,
+                },
+            }));
+        };
+
+    const handleSellerChange = (sellerId: string) => {
+        setFormState((prev) => ({
+            ...prev,
+            sellerId,
+        }));
+    };
+
+    const handleLineItemChange = <Field extends keyof LineItemFormState>(
+        id: string,
+        field: Field,
+        value: LineItemFormState[Field],
+    ) => {
         setFormState((prev) => ({
             ...prev,
             lineItems: prev.lineItems.map((item) =>
                 item.id === id
                     ? {
                           ...item,
-                          [field]: field === 'description' ? value : Number(value) || 0,
+                          [field]: value,
                       }
-                    : item
+                    : item,
             ),
         }));
     };
 
-    const handleAddLineItem = () => {
+    const handleTireSelection = (id: string, tireId: string) => {
+        const tire = findTireById(tireId) ?? tireCatalog.find((candidate) => candidate.id === tireId);
         setFormState((prev) => ({
             ...prev,
-            lineItems: [...prev.lineItems, createLineItem()],
+            lineItems: prev.lineItems.map((item) =>
+                item.id === id
+                    ? {
+                          ...item,
+                          tireId,
+                          description: tire
+                              ? `${tire.brand}${tire.model ? ` ${tire.model}` : ''}`
+                              : item.description,
+                          unitPrice: tire?.suggestedSalePrice ?? item.unitPrice,
+                          remainingQuantity: tire?.quantityOnHand ?? item.remainingQuantity,
+                          hasRemainingStock: tire?.hasRemainingStock ?? item.hasRemainingStock,
+                          lastPurchaseAt: tire?.lastPurchaseAt ?? item.lastPurchaseAt,
+                          lastSaleAt: tire?.lastSaleAt ?? item.lastSaleAt,
+                      }
+                    : item,
+            ),
         }));
     };
 
-    const handleRemoveLineItem = (id: string) => {
+    const addLineItem = () => {
+        setFormState((prev) => ({
+            ...prev,
+            lineItems: [...prev.lineItems, createLineItem(tireCatalog[0])],
+        }));
+    };
+
+    const removeLineItem = (id: string) => {
         setFormState((prev) => ({
             ...prev,
             lineItems:
@@ -108,59 +220,107 @@ const Sales: React.FC = () => {
         }));
     };
 
+    const buildInvoiceLine = (line: LineItemFormState): InvoiceLineItemDetail | null => {
+        if (!line.tireId || !line.description.trim() || !line.quantity || line.quantity <= 0) {
+            return null;
+        }
+
+        const tire = findTireById(line.tireId) ?? tireCatalog.find((candidate) => candidate.id === line.tireId);
+        const importer = tire?.importer ??
+            (tire?.importer?.id ? importerCatalog.find((imp) => imp.id === tire.importer?.id) : undefined);
+
+        const tireSnapshot: TireSnapshot | undefined = tire
+            ? {
+                  ...tire,
+                  quantityOnHand: line.remainingQuantity,
+                  hasRemainingStock: line.hasRemainingStock,
+                  lastPurchaseAt: line.lastPurchaseAt ?? tire.lastPurchaseAt,
+                  lastSaleAt: line.lastSaleAt ?? new Date().toISOString(),
+              }
+            : undefined;
+
+        return {
+            id: line.id,
+            description: line.description.trim(),
+            quantity: line.quantity,
+            unitPrice: line.unitPrice,
+            lineTotal: line.quantity * line.unitPrice,
+            tire: tireSnapshot,
+            importer: importer,
+        };
+    };
+
+    const resetForm = () => {
+        setFormState({
+            invoiceNumber: generateInvoiceNumber(),
+            saleDate: new Date().toISOString().slice(0, 10),
+            sellerId: sellerCatalog[0]?.id ?? '',
+            buyer: normalizeBuyer(merchantCatalog[0]),
+            notes: '',
+            lineItems: [createLineItem(tireCatalog[0])],
+        });
+    };
+
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
 
-        if (!formState.sellerName.trim() || !formState.buyerName.trim()) {
+        const seller = findSellerById(formState.sellerId) ?? sellerCatalog.find((candidate) => candidate.id === formState.sellerId);
+        if (!seller) {
             return;
         }
 
-        const cleanedItems = formState.lineItems
-            .filter((item) => item.description.trim())
-            .map((item) => ({
-                ...item,
-                description: item.description.trim(),
-                quantity: Number(item.quantity) || 0,
-                unitPrice: Number(item.unitPrice) || 0,
-            }));
+        const preparedLineItems = formState.lineItems
+            .map(buildInvoiceLine)
+            .filter((item): item is InvoiceLineItemDetail => Boolean(item));
 
-        if (cleanedItems.length === 0) {
+        if (!preparedLineItems.length) {
             return;
         }
 
-        const totalAmount = calculateTotalAmount(cleanedItems);
-        const notes = formState.notes.trim();
+        const totalAmount = preparedLineItems.reduce((sum, item) => sum + item.lineTotal, 0);
 
-        const invoice: Invoice = {
-            id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+        const invoice: InvoiceRecord = {
+            id: `inv-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
             invoiceNumber: formState.invoiceNumber.trim() || generateInvoiceNumber(),
             saleDate: formState.saleDate,
-            sellerName: formState.sellerName.trim(),
-            buyerName: formState.buyerName.trim(),
-            notes: notes.length ? notes : undefined,
-            lineItems: cleanedItems,
+            buyer: {
+                id: formState.buyer.id,
+                code: formState.buyer.code,
+                name: formState.buyer.name,
+                phone: formState.buyer.phone,
+                address: formState.buyer.address,
+                location: formState.buyer.location,
+                email: formState.buyer.email,
+            },
+            seller: seller,
+            lineItems: preparedLineItems,
             totalAmount,
+            notes: formState.notes.trim() || undefined,
             createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
         };
 
-        saveInvoice(invoice);
-        setInvoices((prev) => [invoice, ...prev.filter((existing) => existing.id !== invoice.id)]);
+        const saved: Invoice = saveInvoice(invoice);
+        setInvoices((prev) => {
+            const without = prev.filter((existing) => existing.id !== saved.id);
+            const next = [saved, ...without];
+            return next.sort((a, b) => b.saleDate.localeCompare(a.saleDate));
+        });
+        setSelectedInvoiceId(saved.id);
         resetForm();
     };
 
     const handleDelete = (invoiceId: string) => {
         deleteInvoice(invoiceId);
         setInvoices((prev) => prev.filter((invoice) => invoice.id !== invoiceId));
+        setSelectedInvoiceId((prev) => (prev === invoiceId ? null : prev));
     };
 
-    const handlePrint = (invoice: Invoice) => {
+    const handlePrint = (invoice: InvoiceRecord) => {
         const printWindow = window.open('', '', 'width=900,height=650');
         if (!printWindow) {
             return;
         }
-
-        const formatCurrency = (value: number) =>
-            value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
         const itemsRows = invoice.lineItems
             .map(
@@ -169,10 +329,10 @@ const Sales: React.FC = () => {
                         <td>${index + 1}</td>
                         <td>${item.description}</td>
                         <td>${item.quantity}</td>
-                        <td>${formatCurrency(item.unitPrice)}</td>
-                        <td>${formatCurrency(item.quantity * item.unitPrice)}</td>
+                        <td>${currencyFormat(item.unitPrice)}</td>
+                        <td>${currencyFormat(item.lineTotal)}</td>
                     </tr>
-                `
+                `,
             )
             .join('');
 
@@ -180,12 +340,12 @@ const Sales: React.FC = () => {
             <style>
                 @page {
                     size: A4;
-                    margin: 20mm;
+                    margin: 16mm;
                 }
 
                 body {
                     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                    color: #333;
+                    color: #0f172a;
                     margin: 0;
                     padding: 0;
                 }
@@ -198,7 +358,7 @@ const Sales: React.FC = () => {
                     box-sizing: border-box;
                 }
 
-                .invoice-print header {
+                header {
                     display: flex;
                     justify-content: space-between;
                     align-items: flex-start;
@@ -207,7 +367,7 @@ const Sales: React.FC = () => {
                     margin-bottom: 24px;
                 }
 
-                .invoice-print h1 {
+                h1 {
                     margin: 0;
                     font-size: 28px;
                     color: #1d4ed8;
@@ -227,7 +387,7 @@ const Sales: React.FC = () => {
                 }
 
                 .invoice-details div {
-                    background: #f1f5f9;
+                    background: #eff6ff;
                     padding: 12px;
                     border-radius: 8px;
                 }
@@ -239,7 +399,7 @@ const Sales: React.FC = () => {
                 }
 
                 th, td {
-                    border: 1px solid #dee2e6;
+                    border: 1px solid #cbd5f5;
                     padding: 8px 12px;
                     text-align: left;
                     font-size: 13px;
@@ -259,7 +419,7 @@ const Sales: React.FC = () => {
 
                 .invoice-notes {
                     font-size: 13px;
-                    color: #495057;
+                    color: #475569;
                 }
             </style>
         `;
@@ -275,22 +435,25 @@ const Sales: React.FC = () => {
                         <header>
                             <div>
                                 <h1>${t('sales.invoiceLabel')}</h1>
-                                <p>${t('sales.sellerLabel')}: ${invoice.sellerName}</p>
+                                <p>${t('sales.sellerLabel')}: ${invoice.seller.fullName ?? invoice.seller.username}</p>
                             </div>
                             <div class="invoice-meta">
                                 <div>${t('sales.invoiceNumberLabel')}: <strong>${invoice.invoiceNumber}</strong></div>
                                 <div>${t('sales.saleDateLabel')}: <strong>${invoice.saleDate}</strong></div>
-                                <div>${t('sales.buyerLabel')}: <strong>${invoice.buyerName}</strong></div>
+                                <div>${t('sales.buyerLabel')}: <strong>${invoice.buyer.name}</strong></div>
                             </div>
                         </header>
                         <section class="invoice-details">
                             <div>
                                 <strong>${t('sales.sellerLabel')}:</strong>
-                                <div>${invoice.sellerName}</div>
+                                <div>${invoice.seller.fullName ?? invoice.seller.username}</div>
+                                ${invoice.seller.phone ? `<div>${invoice.seller.phone}</div>` : ''}
                             </div>
                             <div>
                                 <strong>${t('sales.buyerLabel')}:</strong>
-                                <div>${invoice.buyerName}</div>
+                                <div>${invoice.buyer.name}</div>
+                                ${invoice.buyer.phone ? `<div>${invoice.buyer.phone}</div>` : ''}
+                                ${invoice.buyer.address ? `<div>${invoice.buyer.address}</div>` : ''}
                             </div>
                         </section>
                         <table>
@@ -308,7 +471,7 @@ const Sales: React.FC = () => {
                             </tbody>
                         </table>
                         <div class="invoice-total">
-                            ${t('sales.totalLabel')}: ${formatCurrency(invoice.totalAmount)}
+                            ${t('sales.totalLabel')}: ${currencyFormat(invoice.totalAmount)}
                         </div>
                         ${invoice.notes ? `<div class="invoice-notes"><strong>${t('sales.notesLabel')}:</strong> ${invoice.notes}</div>` : ''}
                     </div>
@@ -325,33 +488,33 @@ const Sales: React.FC = () => {
 
     const filteredInvoices = useMemo(() => {
         const text = filters.searchTerm.trim().toLowerCase();
-        const sellerFilter = filters.sellerName.trim().toLowerCase();
-        const buyerFilter = filters.buyerName.trim().toLowerCase();
-        const invoiceNumberFilter = filters.invoiceNumber.trim().toLowerCase();
-
         return invoices.filter((invoice) => {
-            const saleDate = invoice.saleDate;
             const matchesText =
                 !text ||
                 invoice.invoiceNumber.toLowerCase().includes(text) ||
-                invoice.sellerName.toLowerCase().includes(text) ||
-                invoice.buyerName.toLowerCase().includes(text);
+                invoice.buyer.name.toLowerCase().includes(text) ||
+                (invoice.seller.fullName ?? invoice.seller.username).toLowerCase().includes(text) ||
+                invoice.lineItems.some((item) =>
+                    item.description.toLowerCase().includes(text) ||
+                    item.importer?.name?.toLowerCase().includes(text) ||
+                    item.tire?.brand.toLowerCase().includes(text),
+                );
 
-            const matchesSeller = !sellerFilter || invoice.sellerName.toLowerCase().includes(sellerFilter);
-            const matchesBuyer = !buyerFilter || invoice.buyerName.toLowerCase().includes(buyerFilter);
-            const matchesInvoiceNumber =
-                !invoiceNumberFilter || invoice.invoiceNumber.toLowerCase().includes(invoiceNumberFilter);
-
-            const matchesSpecificDate = !filters.saleDate || saleDate === filters.saleDate;
-
-            const withinStart = !filters.startDate || saleDate >= filters.startDate;
-            const withinEnd = !filters.endDate || saleDate <= filters.endDate;
+            const matchesBuyer = !filters.buyerId || invoice.buyer.id === filters.buyerId;
+            const matchesSeller = !filters.sellerId || invoice.seller.id === filters.sellerId;
+            const matchesImporter =
+                !filters.importerId || invoice.lineItems.some((item) => item.importer?.id === filters.importerId);
+            const matchesTire = !filters.tireId || invoice.lineItems.some((item) => item.tire?.id === filters.tireId);
+            const matchesSpecificDate = !filters.saleDate || invoice.saleDate === filters.saleDate;
+            const withinStart = !filters.startDate || invoice.saleDate >= filters.startDate;
+            const withinEnd = !filters.endDate || invoice.saleDate <= filters.endDate;
 
             return (
                 matchesText &&
-                matchesSeller &&
                 matchesBuyer &&
-                matchesInvoiceNumber &&
+                matchesSeller &&
+                matchesImporter &&
+                matchesTire &&
                 matchesSpecificDate &&
                 withinStart &&
                 withinEnd
@@ -359,12 +522,13 @@ const Sales: React.FC = () => {
         });
     }, [filters, invoices]);
 
-    const handleFilterChange = (field: keyof InvoiceFilters) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        setFilters((prev) => ({
-            ...prev,
-            [field]: event.target.value,
-        }));
-    };
+    const handleFilterChange = (field: keyof InvoiceFilters) =>
+        (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+            setFilters((prev) => ({
+                ...prev,
+                [field]: event.target.value,
+            }));
+        };
 
     const resetFilters = () => {
         setFilters({
@@ -372,14 +536,34 @@ const Sales: React.FC = () => {
             saleDate: '',
             startDate: '',
             endDate: '',
-            sellerName: '',
-            buyerName: '',
-            invoiceNumber: '',
+            buyerId: '',
+            sellerId: '',
+            importerId: '',
+            tireId: '',
         });
     };
 
-    const currencyFormat = (value: number) =>
-        value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const selectedInvoice = useMemo(() => {
+        if (!filteredInvoices.length) {
+            return null;
+        }
+
+        const explicit = filteredInvoices.find((invoice) => invoice.id === selectedInvoiceId);
+        return explicit ?? filteredInvoices[0];
+    }, [filteredInvoices, selectedInvoiceId]);
+
+    const selectedImporters = useMemo(() => {
+        if (!selectedInvoice) {
+            return [];
+        }
+        const map = new Map<string, ImporterSummary>();
+        selectedInvoice.lineItems.forEach((item) => {
+            if (item.importer?.id && !map.has(item.importer.id)) {
+                map.set(item.importer.id, item.importer);
+            }
+        });
+        return Array.from(map.values());
+    }, [selectedInvoice]);
 
     return (
         <div className="sales-page app-grid">
@@ -399,70 +583,24 @@ const Sales: React.FC = () => {
                         value={filters.searchTerm}
                         placeholder={t('sales.searchPlaceholder')}
                         onChange={handleFilterChange('searchTerm')}
-                        aria-label={t('sales.searchPlaceholder')}
                     />
                 </div>
             </section>
 
-            <section className="sales-panel surface-card">
-                <div className="sales-panel__header">
-                    <h2 className="section-heading">{t('sales.filterSectionTitle')}</h2>
-                    <button type="button" className="button button--ghost" onClick={resetFilters}>
-                        <Icon name="minus" size={16} />
-                        {t('sales.resetFilters')}
-                    </button>
-                </div>
-                <div className="filters-grid">
-                    <label>
-                        <span>{t('sales.filter.invoiceNumber')}</span>
-                        <input
-                            type="text"
-                            value={filters.invoiceNumber}
-                            onChange={handleFilterChange('invoiceNumber')}
-                        />
-                    </label>
-                    <label>
-                        <span>{t('sales.filter.seller')}</span>
-                        <input type="text" value={filters.sellerName} onChange={handleFilterChange('sellerName')} />
-                    </label>
-                    <label>
-                        <span>{t('sales.filter.buyer')}</span>
-                        <input type="text" value={filters.buyerName} onChange={handleFilterChange('buyerName')} />
-                    </label>
-                    <label>
-                        <span>{t('sales.filter.exactDate')}</span>
-                        <input type="date" value={filters.saleDate} onChange={handleFilterChange('saleDate')} />
-                    </label>
-                    <label>
-                        <span>{t('sales.filter.startDate')}</span>
-                        <input type="date" value={filters.startDate} onChange={handleFilterChange('startDate')} />
-                    </label>
-                    <label>
-                        <span>{t('sales.filter.endDate')}</span>
-                        <input type="date" value={filters.endDate} onChange={handleFilterChange('endDate')} />
-                    </label>
-                </div>
-            </section>
-
-            <section className="sales-panel surface-card">
-                <div className="sales-panel__header">
-                    <h2 className="section-heading">{t('sales.form.title')}</h2>
-                </div>
-                <form onSubmit={handleSubmit} className="sales-form">
-                    <div className="form-grid">
+            <section className="surface-card sales-form-card">
+                <header className="sales-form-card__header">
+                    <div>
+                        <h2 className="section-heading">{t('sales.newInvoiceTitle')}</h2>
+                        <p className="section-subtitle">{t('sales.newInvoiceSubtitle')}</p>
+                    </div>
+                    <div className="sales-form-card__meta">
+                        <span className="badge badge--muted">{t('sales.invoiceNumberLabel')}: {formState.invoiceNumber}</span>
+                    </div>
+                </header>
+                <form onSubmit={handleSubmit} className="invoice-form">
+                    <div className="invoice-form__row">
                         <label>
-                            <span>{t('sales.form.invoiceNumber')}</span>
-                            <input
-                                type="text"
-                                value={formState.invoiceNumber}
-                                onChange={(event) =>
-                                    setFormState((prev) => ({ ...prev, invoiceNumber: event.target.value }))
-                                }
-                                required
-                            />
-                        </label>
-                        <label>
-                            <span>{t('sales.form.saleDate')}</span>
+                            <span>{t('sales.saleDateLabel')}</span>
                             <input
                                 type="date"
                                 value={formState.saleDate}
@@ -473,183 +611,504 @@ const Sales: React.FC = () => {
                             />
                         </label>
                         <label>
-                            <span>{t('sales.form.sellerName')}</span>
-                            <input
-                                type="text"
-                                value={formState.sellerName}
-                                onChange={(event) =>
-                                    setFormState((prev) => ({ ...prev, sellerName: event.target.value }))
-                                }
-                                required
-                            />
+                            <span>{t('sales.sellerLabel')}</span>
+                            <select
+                                value={formState.sellerId}
+                                onChange={(event) => handleSellerChange(event.target.value)}
+                            >
+                                {sellerCatalog.map((seller) => (
+                                    <option key={seller.id} value={seller.id}>
+                                        {seller.fullName ?? seller.username}
+                                    </option>
+                                ))}
+                            </select>
                         </label>
                         <label>
-                            <span>{t('sales.form.buyerName')}</span>
-                            <input
-                                type="text"
-                                value={formState.buyerName}
-                                onChange={(event) =>
-                                    setFormState((prev) => ({ ...prev, buyerName: event.target.value }))
-                                }
-                                required
-                            />
+                            <span>{t('sales.buyerSelector')}</span>
+                            <select
+                                value={formState.buyer.id}
+                                onChange={(event) => handleBuyerChange(event.target.value)}
+                            >
+                                <option value="">{t('sales.buyerSelectorPlaceholder')}</option>
+                                {merchantCatalog.map((merchant) => (
+                                    <option key={merchant.id} value={merchant.id}>
+                                        {merchant.displayName}
+                                    </option>
+                                ))}
+                            </select>
                         </label>
                     </div>
 
-                    <div className="line-items">
-                        <div className="line-items__header">
-                            <h3>{t('sales.form.lineItemsTitle')}</h3>
-                            <button type="button" className="button button--ghost" onClick={handleAddLineItem}>
-                                <Icon name="plus" size={16} />
-                                {t('sales.form.addLineItem')}
-                            </button>
-                        </div>
-                        {formState.lineItems.map((item) => (
-                            <div key={item.id} className="line-item-row">
+                    <div className="invoice-form__buyer-card">
+                        <h3>{t('sales.buyerDetails')}</h3>
+                        <div className="invoice-form__buyer-grid">
+                            <label>
+                                <span>{t('sales.buyerNameLabel')}</span>
                                 <input
                                     type="text"
-                                    value={item.description}
-                                    placeholder={t('sales.form.itemDescription')}
-                                    onChange={(event) => handleLineItemChange(item.id, 'description', event.target.value)}
+                                    value={formState.buyer.name}
+                                    onChange={handleBuyerFieldChange('name')}
                                     required
                                 />
+                            </label>
+                            <label>
+                                <span>{t('sales.buyerCodeLabel')}</span>
                                 <input
-                                    type="number"
-                                    min="0"
-                                    step="1"
-                                    value={item.quantity}
-                                    placeholder={t('sales.form.quantityPlaceholder')}
-                                    onChange={(event) => handleLineItemChange(item.id, 'quantity', event.target.value)}
-                                    required
+                                    type="text"
+                                    value={formState.buyer.code}
+                                    onChange={handleBuyerFieldChange('code')}
                                 />
+                            </label>
+                            <label>
+                                <span>{t('sales.buyerPhoneLabel')}</span>
                                 <input
-                                    type="number"
-                                    min="0"
-                                    step="0.01"
-                                    value={item.unitPrice}
-                                    placeholder={t('sales.form.unitPricePlaceholder')}
-                                    onChange={(event) => handleLineItemChange(item.id, 'unitPrice', event.target.value)}
-                                    required
+                                    type="tel"
+                                    value={formState.buyer.phone ?? ''}
+                                    onChange={handleBuyerFieldChange('phone')}
                                 />
-                                <button
-                                    type="button"
-                                    className="icon-button icon-button--danger"
-                                    onClick={() => handleRemoveLineItem(item.id)}
-                                    aria-label={t('sales.form.removeLineItem')}
-                                >
-                                    <Icon name="trash" size={16} />
-                                </button>
-                            </div>
-                        ))}
+                            </label>
+                            <label>
+                                <span>{t('sales.buyerEmailLabel')}</span>
+                                <input
+                                    type="email"
+                                    value={formState.buyer.email ?? ''}
+                                    onChange={handleBuyerFieldChange('email')}
+                                />
+                            </label>
+                            <label className="invoice-form__buyer-address">
+                                <span>{t('sales.buyerAddressLabel')}</span>
+                                <input
+                                    type="text"
+                                    value={formState.buyer.address ?? ''}
+                                    onChange={handleBuyerFieldChange('address')}
+                                />
+                            </label>
+                            <label>
+                                <span>{t('sales.buyerLocationLabel')}</span>
+                                <input
+                                    type="text"
+                                    value={formState.buyer.location ?? ''}
+                                    onChange={handleBuyerFieldChange('location')}
+                                />
+                            </label>
+                        </div>
                     </div>
 
-                    <label className="notes-field">
-                        <span>{t('sales.form.notes')}</span>
+                    <div className="invoice-form__line-items">
+                        <header className="invoice-form__line-items-header">
+                            <h3>{t('sales.lineItemsTitle')}</h3>
+                            <button type="button" className="button button--ghost" onClick={addLineItem}>
+                                <Icon name="plus" size={16} />
+                                {t('sales.addLineItem')}
+                            </button>
+                        </header>
+
+                        <div className="invoice-form__line-items-grid">
+                            {formState.lineItems.map((line) => {
+                                const tire = line.tireId
+                                    ? findTireById(line.tireId) ?? tireCatalog.find((candidate) => candidate.id === line.tireId)
+                                    : undefined;
+                                const importer = tire?.importer ??
+                                    (tire?.importer?.id
+                                        ? importerCatalog.find((imp) => imp.id === tire.importer?.id)
+                                        : undefined);
+                                return (
+                                    <article className="line-item-card" key={line.id}>
+                                        <header className="line-item-card__header">
+                                            <div>
+                                                <h4>{line.description || t('sales.lineItemPlaceholder')}</h4>
+                                                {importer ? (
+                                                    <span className="badge badge--muted">
+                                                        {t('sales.importerLabel')}: {importer.name}
+                                                    </span>
+                                                ) : null}
+                                            </div>
+                                            <button
+                                                type="button"
+                                                className="icon-button"
+                                                onClick={() => removeLineItem(line.id)}
+                                                disabled={formState.lineItems.length === 1}
+                                                aria-label={t('sales.removeLineItem')}
+                                            >
+                                                <Icon name="trash" size={16} />
+                                            </button>
+                                        </header>
+                                        <div className="line-item-card__grid">
+                                            <label>
+                                                <span>{t('sales.tireSelector')}</span>
+                                                <select
+                                                    value={line.tireId}
+                                                    onChange={(event) => handleTireSelection(line.id, event.target.value)}
+                                                >
+                                                    <option value="">{t('sales.tireSelectorPlaceholder')}</option>
+                                                    {tireCatalog.map((option) => (
+                                                        <option key={option.id} value={option.id}>
+                                                            {option.brand} {option.model}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </label>
+                                            <label>
+                                                <span>{t('sales.lineItemDescription')}</span>
+                                                <input
+                                                    type="text"
+                                                    value={line.description}
+                                                    onChange={(event) =>
+                                                        handleLineItemChange(line.id, 'description', event.target.value)
+                                                    }
+                                                    required
+                                                />
+                                            </label>
+                                            <label>
+                                                <span>{t('sales.lineItemQuantity')}</span>
+                                                <input
+                                                    type="number"
+                                                    min={1}
+                                                    value={line.quantity}
+                                                    onChange={(event) =>
+                                                        handleLineItemChange(line.id, 'quantity', Number(event.target.value) || 0)
+                                                    }
+                                                    required
+                                                />
+                                            </label>
+                                            <label>
+                                                <span>{t('sales.lineItemPrice')}</span>
+                                                <input
+                                                    type="number"
+                                                    min={0}
+                                                    value={line.unitPrice}
+                                                    onChange={(event) =>
+                                                        handleLineItemChange(line.id, 'unitPrice', Number(event.target.value) || 0)
+                                                    }
+                                                    required
+                                                />
+                                            </label>
+                                            <label>
+                                                <span>{t('sales.remainingQuantityLabel')}</span>
+                                                <input
+                                                    type="number"
+                                                    min={0}
+                                                    value={line.remainingQuantity}
+                                                    onChange={(event) =>
+                                                        handleLineItemChange(line.id, 'remainingQuantity', Number(event.target.value) || 0)
+                                                    }
+                                                />
+                                            </label>
+                                            <label>
+                                                <span>{t('sales.lastPurchaseLabel')}</span>
+                                                <input
+                                                    type="date"
+                                                    value={line.lastPurchaseAt?.slice(0, 10) ?? ''}
+                                                    onChange={(event) =>
+                                                        handleLineItemChange(
+                                                            line.id,
+                                                            'lastPurchaseAt',
+                                                            event.target.value ? `${event.target.value}T00:00:00.000Z` : undefined,
+                                                        )
+                                                    }
+                                                />
+                                            </label>
+                                            <label>
+                                                <span>{t('sales.lastSaleLabel')}</span>
+                                                <input
+                                                    type="date"
+                                                    value={line.lastSaleAt?.slice(0, 10) ?? ''}
+                                                    onChange={(event) =>
+                                                        handleLineItemChange(
+                                                            line.id,
+                                                            'lastSaleAt',
+                                                            event.target.value ? `${event.target.value}T00:00:00.000Z` : undefined,
+                                                        )
+                                                    }
+                                                />
+                                            </label>
+                                            <label className="line-item-card__stock-toggle">
+                                                <span>{t('sales.hasStockLabel')}</span>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={line.hasRemainingStock}
+                                                    onChange={(event) =>
+                                                        handleLineItemChange(line.id, 'hasRemainingStock', event.target.checked)
+                                                    }
+                                                />
+                                            </label>
+                                        </div>
+                                        <footer className="line-item-card__footer">
+                                            <span>{t('sales.lineItemTotal')}</span>
+                                            <strong>{currencyFormat(line.quantity * line.unitPrice)}</strong>
+                                        </footer>
+                                    </article>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    <label className="invoice-form__notes">
+                        <span>{t('sales.notesLabel')}</span>
                         <textarea
                             value={formState.notes}
                             onChange={(event) => setFormState((prev) => ({ ...prev, notes: event.target.value }))}
-                            rows={3}
+                            rows={4}
+                            placeholder={t('sales.notesPlaceholder')}
                         />
                     </label>
 
-                    <div className="form-actions">
+                    <div className="invoice-form__actions">
                         <button type="submit" className="button button--primary">
-                            <Icon name="sales" size={16} />
-                            {t('sales.form.saveInvoice')}
+                            <Icon name="save" size={16} />
+                            {t('sales.saveInvoiceButton')}
                         </button>
                         <button type="button" className="button button--ghost" onClick={resetForm}>
-                            <Icon name="minus" size={16} />
-                            {t('sales.form.resetForm')}
+                            <Icon name="refresh" size={16} />
+                            {t('sales.resetFormButton')}
                         </button>
                     </div>
                 </form>
             </section>
 
-            <section className="sales-panel surface-card">
-                <div className="sales-panel__header">
-                    <h2 className="section-heading">{t('sales.savedInvoicesTitle')}</h2>
+            <section className="surface-card sales-filters-card">
+                <header className="sales-filters-card__header">
+                    <h2 className="section-heading">{t('sales.filterTitle')}</h2>
+                    <button type="button" className="button button--ghost" onClick={resetFilters}>
+                        <Icon name="refresh" size={16} />
+                        {t('sales.clearFilters')}
+                    </button>
+                </header>
+                <div className="sales-filters-grid">
+                    <label>
+                        <span>{t('sales.filterDate')}</span>
+                        <input type="date" value={filters.saleDate} onChange={handleFilterChange('saleDate')} />
+                    </label>
+                    <label>
+                        <span>{t('sales.filterStartDate')}</span>
+                        <input type="date" value={filters.startDate} onChange={handleFilterChange('startDate')} />
+                    </label>
+                    <label>
+                        <span>{t('sales.filterEndDate')}</span>
+                        <input type="date" value={filters.endDate} onChange={handleFilterChange('endDate')} />
+                    </label>
+                    <label>
+                        <span>{t('sales.filterBuyer')}</span>
+                        <select value={filters.buyerId} onChange={handleFilterChange('buyerId')}>
+                            <option value="">{t('sales.anyOption')}</option>
+                            {merchantCatalog.map((merchant) => (
+                                <option key={merchant.id} value={merchant.id}>
+                                    {merchant.displayName}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                    <label>
+                        <span>{t('sales.filterSeller')}</span>
+                        <select value={filters.sellerId} onChange={handleFilterChange('sellerId')}>
+                            <option value="">{t('sales.anyOption')}</option>
+                            {sellerCatalog.map((seller) => (
+                                <option key={seller.id} value={seller.id}>
+                                    {seller.fullName ?? seller.username}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                    <label>
+                        <span>{t('sales.filterImporter')}</span>
+                        <select value={filters.importerId} onChange={handleFilterChange('importerId')}>
+                            <option value="">{t('sales.anyOption')}</option>
+                            {importerCatalog.map((importer) => (
+                                <option key={importer.id} value={importer.id}>
+                                    {importer.name}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                    <label>
+                        <span>{t('sales.filterTire')}</span>
+                        <select value={filters.tireId} onChange={handleFilterChange('tireId')}>
+                            <option value="">{t('sales.anyOption')}</option>
+                            {tireCatalog.map((tire) => (
+                                <option key={tire.id} value={tire.id}>
+                                    {tire.brand} {tire.model}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                </div>
+            </section>
+
+            <section className="surface-card sales-list-card">
+                <header className="sales-list-card__header">
+                    <div>
+                        <h2 className="section-heading">{t('sales.savedInvoices')}</h2>
+                        <p className="section-subtitle">{t('sales.savedInvoicesSubtitle')}</p>
+                    </div>
                     <span className="badge">
                         <Icon name="calendar" size={16} />
                         {filteredInvoices.length}
                     </span>
-                </div>
+                </header>
                 {filteredInvoices.length === 0 ? (
-                    <p className="empty-state">{t('sales.emptyState')}</p>
+                    <p className="empty-state">{t('sales.noInvoicesMessage')}</p>
                 ) : (
-                    <ul className="invoice-list">
+                    <div className="invoice-list">
                         {filteredInvoices.map((invoice) => (
-                            <li key={invoice.id} className="invoice-card">
-                                <div className="invoice-card__header">
-                                    <div className="invoice-card__meta">
+                            <article
+                                key={invoice.id}
+                                className={`invoice-list__item${invoice.id === selectedInvoice?.id ? ' invoice-list__item--active' : ''}`}
+                                onClick={() => setSelectedInvoiceId(invoice.id)}
+                            >
+                                <header className="invoice-list__item-header">
+                                    <div>
                                         <h3>{invoice.invoiceNumber}</h3>
-                                        <div className="invoice-card__meta-row">
-                                            <Icon name="calendar" size={16} />
-                                            <span>
-                                                {t('sales.saleDateLabel')}: <strong>{invoice.saleDate}</strong>
-                                            </span>
-                                        </div>
-                                        <div className="invoice-card__meta-row">
-                                            <Icon name="sales" size={16} />
-                                            <span>
-                                                {t('sales.sellerLabel')}: <strong>{invoice.sellerName}</strong>
-                                            </span>
-                                        </div>
-                                        <div className="invoice-card__meta-row">
-                                            <Icon name="purchases" size={16} />
-                                            <span>
-                                                {t('sales.buyerLabel')}: <strong>{invoice.buyerName}</strong>
-                                            </span>
-                                        </div>
+                                        <span className="invoice-list__item-date">{invoice.saleDate}</span>
                                     </div>
-                                    <div className="invoice-card__actions">
-                                        <button type="button" className="button button--ghost" onClick={() => handlePrint(invoice)}>
-                                            <Icon name="printer" size={16} />
-                                            {t('sales.printInvoice')}
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="button button--danger"
-                                            onClick={() => handleDelete(invoice.id)}
-                                        >
-                                            <Icon name="trash" size={16} />
-                                            {t('sales.deleteInvoice')}
-                                        </button>
+                                    <div className="invoice-list__item-total">{currencyFormat(invoice.totalAmount)}</div>
+                                </header>
+                                <div className="invoice-list__meta">
+                                    <div>
+                                        <strong>{t('sales.buyerLabel')}:</strong>
+                                        <span>{invoice.buyer.name}</span>
+                                    </div>
+                                    <div>
+                                        <strong>{t('sales.sellerLabel')}:</strong>
+                                        <span>{invoice.seller.fullName ?? invoice.seller.username}</span>
                                     </div>
                                 </div>
-                                <table className="invoice-items-table">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>{t('sales.lineItemDescription')}</th>
-                                            <th>{t('sales.lineItemQuantity')}</th>
-                                            <th>{t('sales.lineItemPrice')}</th>
-                                            <th>{t('sales.lineItemTotal')}</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {invoice.lineItems.map((item, index) => (
-                                            <tr key={item.id}>
-                                                <td>{index + 1}</td>
-                                                <td>{item.description}</td>
-                                                <td>{item.quantity}</td>
-                                                <td>{currencyFormat(item.unitPrice)}</td>
-                                                <td>{currencyFormat(item.quantity * item.unitPrice)}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                                {invoice.notes && (
-                                    <p className="invoice-notes">
-                                        <strong>{t('sales.notesLabel')}:</strong> {invoice.notes}
-                                    </p>
-                                )}
-                                <div className="invoice-summary">
-                                    <span>{t('sales.totalLabel')}:</span>
-                                    <strong>{currencyFormat(invoice.totalAmount)}</strong>
-                                </div>
-                            </li>
+                                <ul className="invoice-list__line-items">
+                                    {invoice.lineItems.map((item) => (
+                                        <li key={item.id}>
+                                            <span>{item.description}</span>
+                                            {item.importer?.name ? (
+                                                <span className="invoice-list__importer">{item.importer.name}</span>
+                                            ) : null}
+                                            <span>{item.quantity} × {currencyFormat(item.unitPrice)}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                                <footer className="invoice-list__actions">
+                                    <button type="button" className="button button--ghost" onClick={() => handlePrint(invoice)}>
+                                        <Icon name="printer" size={14} />
+                                        {t('sales.printInvoiceButton')}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="button button--danger"
+                                        onClick={() => handleDelete(invoice.id)}
+                                    >
+                                        <Icon name="trash" size={14} />
+                                        {t('sales.deleteInvoiceButton')}
+                                    </button>
+                                </footer>
+                            </article>
                         ))}
-                    </ul>
+                    </div>
+                )}
+            </section>
+
+            <section className="surface-card sales-relations-card">
+                <header className="sales-relations-card__header">
+                    <div>
+                        <h2 className="section-heading">{t('sales.relationshipsTitle')}</h2>
+                        <p className="section-subtitle">{t('sales.relationshipsSubtitle')}</p>
+                    </div>
+                </header>
+                {!selectedInvoice ? (
+                    <p className="empty-state">{t('sales.noInvoiceSelected')}</p>
+                ) : (
+                    <div className="relationships-grid">
+                        <div className="relationships-card">
+                            <h3>{t('sales.buyerHistoryTitle')}</h3>
+                            <div className="relationships-card__body">
+                                <div className="relationships-card__party">
+                                    <strong>{selectedInvoice.buyer.name}</strong>
+                                    {selectedInvoice.buyer.phone ? (
+                                        <span>{selectedInvoice.buyer.phone}</span>
+                                    ) : null}
+                                    {selectedInvoice.buyer.address ? (
+                                        <span>{selectedInvoice.buyer.address}</span>
+                                    ) : null}
+                                </div>
+                                <ul className="relationships-list">
+                                    {(selectedInvoice.buyer.previousInvoices ?? []).length === 0 ? (
+                                        <li className="relationships-list__empty">{t('sales.noPreviousInvoices')}</li>
+                                    ) : (
+                                        selectedInvoice.buyer.previousInvoices!.map((entry) => (
+                                            <li key={entry.invoiceId}>
+                                                <span>{entry.invoiceNumber}</span>
+                                                <span>{entry.saleDate}</span>
+                                                <span>{currencyFormat(entry.totalAmount)}</span>
+                                            </li>
+                                        ))
+                                    )}
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="relationships-card">
+                            <h3>{t('sales.importerOverviewTitle')}</h3>
+                            <div className="relationships-card__body">
+                                {selectedImporters.length === 0 ? (
+                                    <p className="relationships-list__empty">{t('sales.noImporterData')}</p>
+                                ) : (
+                                    <ul className="relationships-list relationships-list--vertical">
+                                        {selectedImporters.map((importer) => (
+                                            <li key={importer.id}>
+                                                <div>
+                                                    <strong>{importer.name}</strong>
+                                                    {importer.importerCode ? (
+                                                        <span>{importer.importerCode}</span>
+                                                    ) : null}
+                                                </div>
+                                                <div>
+                                                    {importer.phone ? <span>{importer.phone}</span> : null}
+                                                    {importer.location ? <span>{importer.location}</span> : null}
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        </div>
+                        <div className="relationships-card relationships-card--wide">
+                            <h3>{t('sales.tireMovementTitle')}</h3>
+                            <div className="relationships-card__body relationships-card__body--tire">
+                                {selectedInvoice.lineItems.map((item) => (
+                                    <article key={item.id} className="tire-summary">
+                                        <header>
+                                            <div>
+                                                <strong>{item.tire?.brand ?? item.description}</strong>
+                                                {item.tire?.model ? <span>{item.tire.model}</span> : null}
+                                            </div>
+                                            <span className={`stock-chip${item.tire?.hasRemainingStock ? ' stock-chip--ok' : ' stock-chip--empty'}`}>
+                                                {item.tire?.hasRemainingStock
+                                                    ? t('sales.stockAvailable')
+                                                    : t('sales.stockEmpty')}
+                                            </span>
+                                        </header>
+                                        <dl>
+                                            <div>
+                                                <dt>{t('sales.quantityOnHandLabel')}</dt>
+                                                <dd>{item.tire?.quantityOnHand ?? 0}</dd>
+                                            </div>
+                                            <div>
+                                                <dt>{t('sales.lastPurchaseLabel')}</dt>
+                                                <dd>{item.tire?.lastPurchaseAt?.slice(0, 10) ?? t('sales.unknownDate')}</dd>
+                                            </div>
+                                            <div>
+                                                <dt>{t('sales.lastSaleLabel')}</dt>
+                                                <dd>{item.tire?.lastSaleAt?.slice(0, 10) ?? t('sales.unknownDate')}</dd>
+                                            </div>
+                                            <div>
+                                                <dt>{t('sales.lineItemQuantity')}</dt>
+                                                <dd>{item.quantity}</dd>
+                                            </div>
+                                            <div>
+                                                <dt>{t('sales.lineItemTotal')}</dt>
+                                                <dd>{currencyFormat(item.lineTotal)}</dd>
+                                            </div>
+                                        </dl>
+                                    </article>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                 )}
             </section>
         </div>

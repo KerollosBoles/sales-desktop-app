@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Invoice, InvoiceLineItem } from '../../models/invoice';
+import { Invoice } from '../../models/invoice';
+import { InvoiceLineItemDetail } from '../../models/invoice-line-item';
 import { loadInvoices } from '../services/invoiceStorage';
 import Icon from './Icon';
 import './GlobalSearch.css';
@@ -22,7 +23,7 @@ interface SearchCriteria {
 
 interface InvoiceSearchResult {
     invoice: Invoice;
-    matchedLineItems: InvoiceLineItem[];
+    matchedLineItems: InvoiceLineItemDetail[];
     notesMatch: boolean;
 }
 
@@ -110,11 +111,12 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => {
                     return false;
                 }
 
-                if (sellerName && !normalise(invoice.sellerName).includes(sellerName)) {
+                const sellerLabel = normalise(invoice.seller.fullName ?? invoice.seller.username);
+                if (sellerName && !sellerLabel.includes(sellerName)) {
                     return false;
                 }
 
-                if (buyerName && !normalise(invoice.buyerName).includes(buyerName)) {
+                if (buyerName && !normalise(invoice.buyer.name).includes(buyerName)) {
                     return false;
                 }
 
@@ -124,8 +126,8 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => {
 
                 const fieldsToSearch = [
                     invoice.invoiceNumber,
-                    invoice.sellerName,
-                    invoice.buyerName,
+                    invoice.buyer.name,
+                    invoice.seller.fullName ?? invoice.seller.username,
                     invoice.notes ?? '',
                 ]
                     .map(normalise)
@@ -135,11 +137,27 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => {
                     return true;
                 }
 
-                return invoice.lineItems.some((item) => normalise(item.description).includes(term));
+                return invoice.lineItems.some((item) => {
+                    const importerName = item.importer?.name ? normalise(item.importer.name) : '';
+                    const tireBrand = item.tire?.brand ? normalise(item.tire.brand) : '';
+                    return (
+                        normalise(item.description).includes(term) ||
+                        importerName.includes(term) ||
+                        tireBrand.includes(term)
+                    );
+                });
             })
             .map((invoice) => {
                 const matchedLineItems = term
-                    ? invoice.lineItems.filter((item) => normalise(item.description).includes(term))
+                    ? invoice.lineItems.filter((item) => {
+                          const importerName = item.importer?.name ? normalise(item.importer.name) : '';
+                          const tireBrand = item.tire?.brand ? normalise(item.tire.brand) : '';
+                          return (
+                              normalise(item.description).includes(term) ||
+                              importerName.includes(term) ||
+                              tireBrand.includes(term)
+                          );
+                      })
                     : [];
                 const notesMatch = Boolean(term && invoice.notes && normalise(invoice.notes).includes(term));
                 return { invoice, matchedLineItems, notesMatch };
@@ -276,13 +294,13 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => {
                                                 <span className="global-search-result__label">
                                                     {t('sales.sellerLabel')}:
                                                 </span>{' '}
-                                                {invoice.sellerName}
+                                                {invoice.seller.fullName ?? invoice.seller.username}
                                             </div>
                                             <div>
                                                 <span className="global-search-result__label">
                                                     {t('sales.buyerLabel')}:
                                                 </span>{' '}
-                                                {invoice.buyerName}
+                                                {invoice.buyer.name}
                                             </div>
                                             <div>
                                                 <span className="global-search-result__label">
@@ -312,6 +330,11 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ open, onClose }) => {
                                                             {matchedLineItems.map((item) => (
                                                                 <li key={item.id}>
                                                                     <span>{item.description}</span>
+                                                                    {item.importer?.name ? (
+                                                                        <span className="global-search-result__matches-meta">
+                                                                            {item.importer.name}
+                                                                        </span>
+                                                                    ) : null}
                                                                     <span className="global-search-result__matches-meta">
                                                                         {item.quantity} × {item.unitPrice}
                                                                     </span>

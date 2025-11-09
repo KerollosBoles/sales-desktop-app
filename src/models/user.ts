@@ -1,27 +1,47 @@
-export interface User {
-    id: number;
-    username: string;
-    password: string;
-    role: 'owner' | 'employee';
-    createdAt: Date;
-    updatedAt: Date;
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from 'typeorm';
+import { InvoiceEntity } from './invoice';
+
+@Entity({ name: 'users' })
+export class UserEntity {
+    @PrimaryGeneratedColumn('uuid')
+    id!: string;
+
+    @Column({ unique: true, length: 50 })
+    username!: string;
+
+    @Column()
+    password!: string;
+
+    @Column({ length: 20 })
+    role!: 'owner' | 'employee';
+
+    @Column({ name: 'full_name', length: 150, nullable: true })
+    fullName?: string;
+
+    @Column({ length: 30, nullable: true })
+    phone?: string;
+
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt!: Date;
+
+    @UpdateDateColumn({ name: 'updated_at' })
+    updatedAt!: Date;
+
+    @OneToMany(() => InvoiceEntity, (invoice) => invoice.seller)
+    sales!: InvoiceEntity[];
 }
 
-export class UserModel {
-    constructor(public user: User) {}
-
-    static createUser(username: string, password: string, role: 'owner' | 'employee'): User {
-        return {
-            id: Date.now(), // Simple ID generation for example purposes
-            username,
-            password,
-            role,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-        };
-    }
-
-    static updateUser(user: User, updates: Partial<User>): User {
-        return { ...user, ...updates, updatedAt: new Date() };
-    }
+export interface UserSummary {
+    id: string;
+    username: string;
+    role: 'owner' | 'employee';
+    fullName?: string;
+    phone?: string;
 }

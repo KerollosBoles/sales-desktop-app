@@ -43,7 +43,8 @@
     font-size: 0.9rem;
 }
 
-.purchases-form input {
+.purchases-form input,
+.purchases-form select {
     padding: 12px 14px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--color-border);
@@ -51,7 +52,8 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.purchases-form input:focus {
+.purchases-form input:focus,
+.purchases-form select:focus {
     outline: none;
     border-color: var(--color-primary);
     box-shadow: 0 0 0 4px var(--color-primary-soft);
@@ -80,6 +82,13 @@
     background: var(--color-primary);
     color: #ffffff;
     font-weight: 600;
+}
+
+.purchases-supplier {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.9rem;
 }
 
 @media (max-width: 720px) {

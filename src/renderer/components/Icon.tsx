@@ -13,7 +13,9 @@ type IconName =
     | 'calendar'
     | 'user'
     | 'file-text'
-    | 'lock';
+    | 'lock'
+    | 'refresh'
+    | 'save';
 
 interface IconProps extends React.SVGAttributes<SVGElement> {
     name: IconName;
@@ -45,6 +47,10 @@ const paths: Record<IconName, string> = {
         'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zm1 0 6 6h-6zM8 13h8v2H8zm0 4h8v2H8z',
     lock:
         'M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2zm-6 8.73V18a1 1 0 0 1 2 0v-.27a1.5 1.5 0 1 0-2 0zM9 7a3 3 0 1 1 6 0v2H9z',
+    refresh:
+        'M20 11a1 1 0 0 1-1 1H7.41l2.3 2.29a1 1 0 0 1-1.42 1.42l-4-4a1 1 0 0 1 0-1.42l4-4a1 1 0 1 1 1.42 1.42L7.41 10H19a1 1 0 0 1 1 1zm-6.71 3.71 2.3 2.29H5a1 1 0 0 0 0 2h12.59l-2.3 2.29a1 1 0 0 0 1.42 1.42l4-4a1 1 0 0 0 0-1.42l-4-4a1 1 0 0 0-1.42 1.42z',
+    save:
+        'M5 5a2 2 0 0 1 2-2h9.59L21 7.41V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5zm2 0v12h10V8h-4a1 1 0 0 1-1-1V3H7zm5 14a3 3 0 1 0-3-3 3 3 0 0 0 3 3z',
 };
 
 const Icon: React.FC<IconProps> = ({ name, size = 20, className, ...props }) => {
