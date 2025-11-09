@@ -1,0 +1,345 @@
+.sales-page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px;
+    color: #1f2933;
+}
+
+.sales-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.sales-header h1 {
+    font-size: 2rem;
+    margin: 0;
+    color: #0b7285;
+}
+
+.sales-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: min(320px, 100%);
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 999px;
+    padding: 8px 16px 8px 40px;
+    transition: box-shadow 0.2s ease;
+}
+
+.sales-search:focus-within {
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.25);
+    border-color: #0d9488;
+}
+
+.sales-search input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 0.95rem;
+    background: transparent;
+    color: inherit;
+}
+
+.search-icon {
+    position: absolute;
+    left: 14px;
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+    color: #64748b;
+    pointer-events: none;
+}
+
+.search-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.filters-panel,
+.invoice-form,
+.invoice-list {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.filters-panel h2,
+.invoice-form h2,
+.invoice-list h2 {
+    margin-top: 0;
+    color: #0b7285;
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.filters-grid label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: #475569;
+}
+
+.filters-grid input {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filters-grid input:focus {
+    outline: none;
+    border-color: #0d9488;
+    box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.form-grid label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: #475569;
+}
+
+.form-grid input,
+.notes-field textarea {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-grid input:focus,
+.notes-field textarea:focus {
+    outline: none;
+    border-color: #0d9488;
+    box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
+}
+
+.line-items {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.line-items h3 {
+    margin: 0;
+    color: #0f172a;
+}
+
+.line-item-row {
+    display: grid;
+    grid-template-columns: 2fr repeat(2, minmax(100px, 1fr)) 40px;
+    gap: 12px;
+    align-items: center;
+}
+
+.line-item-row input {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.95rem;
+}
+
+.line-item-row input:focus {
+    outline: none;
+    border-color: #0d9488;
+    box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
+}
+
+.line-item-row .icon {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: #fee2e2;
+    color: #b91c1c;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.line-item-row .icon:hover {
+    background: #fecaca;
+}
+
+.notes-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #475569;
+}
+
+.notes-field textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.primary,
+.secondary,
+.danger {
+    border: none;
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.primary {
+    background: #0d9488;
+    color: #ffffff;
+    box-shadow: 0 10px 20px rgba(13, 148, 136, 0.25);
+}
+
+.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 22px rgba(13, 148, 136, 0.3);
+}
+
+.secondary {
+    background: #e2e8f0;
+    color: #1f2937;
+}
+
+.secondary:hover {
+    background: #cbd5e1;
+}
+
+.danger {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+.danger:hover {
+    background: #dc2626;
+}
+
+.invoice-list ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.invoice-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.invoice-card-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.invoice-card-header h3 {
+    margin: 0;
+    color: #0b7285;
+}
+
+.invoice-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.invoice-items-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.invoice-items-table th,
+.invoice-items-table td {
+    border: 1px solid #e2e8f0;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+.invoice-items-table th {
+    background: #0b7285;
+    color: #ffffff;
+}
+
+.invoice-summary {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.invoice-notes {
+    margin: 0;
+    color: #475569;
+}
+
+.empty-state {
+    margin: 0;
+    color: #94a3b8;
+    text-align: center;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+@media (max-width: 768px) {
+    .line-item-row {
+        grid-template-columns: 1fr;
+    }
+
+    .line-item-row .icon {
+        width: 100%;
+    }
+
+    .sales-page {
+        padding: 16px;
+    }
+}
