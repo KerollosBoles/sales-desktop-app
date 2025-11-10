@@ -1,0 +1,237 @@
+:root {
+    --color-bg: #f5f7fb;
+    --color-surface: #ffffff;
+    --color-surface-muted: #f1f5f9;
+    --color-border: rgba(15, 23, 42, 0.08);
+    --color-border-strong: rgba(15, 23, 42, 0.12);
+    --color-text: #0f172a;
+    --color-text-muted: #64748b;
+    --color-primary: #2563eb;
+    --color-primary-strong: #1d4ed8;
+    --color-primary-soft: rgba(37, 99, 235, 0.12);
+    --color-accent: #10b981;
+    --color-danger: #ef4444;
+    --shadow-sm: 0 4px 14px rgba(15, 23, 42, 0.08);
+    --shadow-md: 0 18px 45px rgba(15, 23, 42, 0.12);
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --app-max-width: 1240px;
+    font-family: 'Cairo', 'Inter', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    background: radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.12) 0%, transparent 55%),
+        radial-gradient(circle at 100% 0%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+        var(--color-bg);
+    color: var(--color-text);
+    font-family: inherit;
+}
+
+#root {
+    min-height: 100%;
+}
+
+a {
+    color: inherit;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.app-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: clamp(16px, 3vw, 40px);
+}
+
+.app-main__inner {
+    width: min(var(--app-max-width), 100%);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(20px, 3vw, 32px);
+}
+
+.surface-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    padding: clamp(20px, 2vw, 32px);
+}
+
+.surface-card--glass {
+    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.section-heading {
+    margin: 0 0 16px;
+    font-size: clamp(1.4rem, 2vw, 1.85rem);
+    font-weight: 700;
+}
+
+.section-subtitle {
+    margin: -12px 0 24px;
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+}
+
+.input,
+textarea,
+select {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    background: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px var(--color-primary-soft);
+}
+
+.app-grid {
+    display: grid;
+    gap: clamp(16px, 3vw, 32px);
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    background: var(--color-surface-muted);
+    color: var(--color-text-muted);
+}
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 999px;
+    padding: 12px 20px;
+    font-weight: 600;
+    border: none;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.button--primary {
+    background: var(--color-primary);
+    color: #fff;
+    box-shadow: 0 12px 24px rgba(37, 99, 235, 0.28);
+}
+
+.button--primary:hover {
+    transform: translateY(-2px);
+    background: var(--color-primary-strong);
+    box-shadow: 0 16px 34px rgba(37, 99, 235, 0.35);
+}
+
+.button--ghost {
+    background: rgba(37, 99, 235, 0.12);
+    color: var(--color-primary-strong);
+}
+
+.button--ghost:hover {
+    background: rgba(37, 99, 235, 0.18);
+}
+
+.button--danger {
+    background: var(--color-danger);
+    color: #fff;
+    box-shadow: 0 12px 24px rgba(239, 68, 68, 0.26);
+}
+
+.button--danger:hover {
+    transform: translateY(-2px);
+    background: #dc2626;
+}
+
+.button--text {
+    background: transparent;
+    border: none;
+    color: var(--color-primary-strong);
+    padding: 0;
+    font-weight: 600;
+}
+
+.button--text:hover,
+.button--text:focus {
+    text-decoration: underline;
+    outline: none;
+}
+
+.icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    border: none;
+    width: 36px;
+    height: 36px;
+    background: var(--color-surface-muted);
+    color: var(--color-text-muted);
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.icon-button:hover,
+.icon-button:focus {
+    outline: none;
+    background: rgba(37, 99, 235, 0.16);
+    color: var(--color-primary-strong);
+    transform: translateY(-1px);
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--color-text-muted);
+    padding: 40px 0;
+}
+
+@media (max-width: 720px) {
+    .app-main {
+        padding: 16px;
+    }
+
+    .surface-card {
+        border-radius: var(--radius-sm);
+        padding: 20px;
+    }
+}

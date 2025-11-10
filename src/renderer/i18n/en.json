@@ -1,36 +1,222 @@
 {
   "appTitle": "Sales and Purchase Tracker",
+  "app": {
+    "title": "Sales Management",
+    "subtitle": "Track every invoice, sale, and purchase in one beautiful workspace.",
+    "navigation": "Main navigation"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "sales": "Sales",
+    "purchases": "Purchases",
+    "logout": "Sign out"
+  },
   "login": {
+    "title": "Login",
+    "subtitle": "Secure access to your business dashboard",
     "username": "Username",
     "password": "Password",
-    "loginButton": "Login",
-    "forgotPassword": "Forgot Password?"
+    "submit": "Sign in",
+    "authenticating": "Signing you in...",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "createAccount": "Create a new account",
+    "sessionSecurity": "Sessions are protected with device fingerprints.",
+    "support": "Need support?",
+    "securityTitle": "Trusted access",
+    "securitySubtitle": "We protect every login and keep your team in sync.",
+    "security": {
+      "audit": "Live activity trail",
+      "auditDescription": "Every login, logout, and user change is captured automatically.",
+      "roles": "Role based limits",
+      "rolesDescription": "Owners and partners can manage inventory while employees stay focused on invoices.",
+      "team": "Partner friendly",
+      "teamDescription": "Invite staff securely and keep their permissions under control."
+    }
+  },
+  "register": {
+    "title": "Create your workspace",
+    "subtitle": "Choose how you manage the business and invite your team later.",
+    "roleLabel": "Account role",
+    "roles": {
+      "owner": {
+        "title": "Owner",
+        "description": "Full control with inventory access and the ability to manage staff."
+      },
+      "partner": {
+        "title": "Partner",
+        "description": "Collaborative control with shared access and team permissions."
+      }
+    },
+    "fullName": "Full name",
+    "fullNamePlaceholder": "Business contact name",
+    "companyName": "Company name",
+    "companyPlaceholder": "Trading name or showroom",
+    "phone": "Phone",
+    "phonePlaceholder": "Contact phone",
+    "username": "Username",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "submit": "Create account",
+    "submitting": "Setting things up...",
+    "securityHint": "Passwords are encrypted with industry standard hashing.",
+    "haveAccount": "Already registered?",
+    "backToLogin": "Back to login",
+    "securityTitle": "Enterprise grade protections",
+    "securitySubtitle": "Your data stays encrypted with automatic auditing and team controls.",
+    "security": {
+      "passwords": "Strong encryption",
+      "passwordsDescription": "All credentials are hashed using modern cryptography.",
+      "audit": "Full audit history",
+      "auditDescription": "Track every change in a timeline you can trust.",
+      "team": "Smart team control",
+      "teamDescription": "Grant employees invoice access without exposing the warehouse."
+    }
   },
   "dashboard": {
+    "title": "Dashboard",
     "welcome": "Welcome to the Dashboard",
-    "salesOverview": "Sales Overview",
-    "purchasesOverview": "Purchases Overview"
+    "subtitle": "All your business tools are just one click away.",
+    "sales": "Sales",
+    "salesDescription": "Create invoices, manage line items, and print polished receipts.",
+    "purchases": "Purchases",
+    "purchasesDescription": "Record incoming stock and keep supplier activity organized.",
+    "open": "Open"
+  },
+  "team": {
+    "heading": "Team management",
+    "membersCount": "{{count}} team members",
+    "inviteTitle": "Invite employees",
+    "inviteSubtitle": "Employees can issue invoices without viewing warehouse stock.",
+    "fullName": "Full name",
+    "fullNamePlaceholder": "Employee name (optional)",
+    "username": "Username",
+    "phone": "Phone",
+    "password": "Temporary password",
+    "create": "Create employee",
+    "creating": "Creating...",
+    "permissionHint": "Employees are limited to invoicing. Inventory stays hidden.",
+    "membersTitle": "Current team",
+    "invoiceAccess": "Invoices only",
+    "restrictedInventory": "Inventory hidden",
+    "empty": "No team members yet. Invite your first employee to get started.",
+    "success": "Employee added successfully.",
+    "activityTitle": "Security timeline",
+    "activityEmpty": "No activity recorded yet.",
+    "refreshActivity": "Refresh security timeline",
+    "activity": {
+      "account": {
+        "registered": "Workspace created"
+      },
+      "auth": {
+        "login": "Successful login",
+        "logout": "Signed out"
+      },
+      "security": {
+        "failed_login": "Failed login attempt for {{username}}"
+      },
+      "team": {
+        "create_employee": "New employee invited ({{employeeUsername}})"
+      }
+    }
   },
   "sales": {
-    "recordSale": "Record Sale",
-    "saleDate": "Sale Date",
-    "buyer": "Buyer",
-    "itemType": "Item Type",
-    "amount": "Amount",
-    "submit": "Submit"
+    "title": "Sales & Invoices",
+    "subtitle": "Craft invoices, connect importers to stock, and surface buyer history instantly.",
+    "searchPlaceholder": "Search invoices by number, buyer, seller, importer, or tire brand",
+    "newInvoiceTitle": "Create a connected invoice",
+    "newInvoiceSubtitle": "Link buyers, sellers, tires, and importers so every relation stays clear.",
+    "invoiceNumberLabel": "Invoice number",
+    "saleDateLabel": "Sale date",
+    "sellerLabel": "Seller",
+    "buyerLabel": "Buyer",
+    "buyerSelector": "Select buyer",
+    "buyerSelectorPlaceholder": "Choose a buyer",
+    "buyerDetails": "Buyer details",
+    "buyerNameLabel": "Buyer name",
+    "buyerCodeLabel": "Buyer ID / code",
+    "buyerPhoneLabel": "Phone",
+    "buyerEmailLabel": "Email",
+    "buyerAddressLabel": "Address",
+    "buyerLocationLabel": "City / location",
+    "lineItemsTitle": "Invoice line items",
+    "lineItemPlaceholder": "Choose a tire and quantity",
+    "addLineItem": "Add line item",
+    "removeLineItem": "Remove line item",
+    "tireSelector": "Tire / product",
+    "tireSelectorPlaceholder": "Select tire brand and size",
+    "lineItemDescription": "Description",
+    "lineItemQuantity": "Quantity",
+    "lineItemPrice": "Unit price",
+    "remainingQuantityLabel": "Qty remaining after sale",
+    "lastPurchaseLabel": "Last purchase date",
+    "lastSaleLabel": "Last sale date",
+    "hasStockLabel": "Stock available",
+    "lineItemTotal": "Line total",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "Internal notes about this invoice, payment terms, or delivery details",
+    "saveInvoiceButton": "Save invoice",
+    "resetFormButton": "Reset form",
+    "filterTitle": "Filter invoices",
+    "clearFilters": "Clear filters",
+    "filterDate": "Exact day",
+    "filterStartDate": "From date",
+    "filterEndDate": "To date",
+    "filterBuyer": "Buyer",
+    "filterSeller": "Seller",
+    "filterImporter": "Importer",
+    "filterTire": "Tire brand",
+    "anyOption": "Any",
+    "savedInvoices": "Saved invoices",
+    "savedInvoicesSubtitle": "Select an invoice to see connected importers, tires, and buyer activity.",
+    "noInvoicesMessage": "No invoices match the current filters. Try adjusting the filters or create a new invoice.",
+    "printInvoiceButton": "Print",
+    "deleteInvoiceButton": "Delete",
+    "printWindowTitle": "Invoice {{id}}",
+    "invoiceLabel": "Invoice",
+    "totalLabel": "Total",
+    "relationshipsTitle": "Live relationships",
+    "relationshipsSubtitle": "Understand how buyers, sellers, importers, and stock interact for this invoice.",
+    "noInvoiceSelected": "Select an invoice to review its relationships.",
+    "buyerHistoryTitle": "Buyer history",
+    "noPreviousInvoices": "No previous invoices recorded for this buyer.",
+    "importerOverviewTitle": "Importers linked to this invoice",
+    "noImporterData": "No importer data linked to the selected invoice.",
+    "tireMovementTitle": "Tire movement & stock",
+    "stockAvailable": "In stock",
+    "stockEmpty": "Out of stock",
+    "quantityOnHandLabel": "Quantity on hand",
+    "unknownDate": "Unknown",
+    "printWindow": {
+      "sellerContact": "Seller",
+      "buyerContact": "Buyer"
+    }
   },
   "purchases": {
+    "title": "Purchases",
+    "subtitle": "Log inventory coming in and know who supplied it.",
     "recordPurchase": "Record Purchase",
     "purchaseDate": "Purchase Date",
     "supplier": "Supplier",
     "itemType": "Item Type",
-    "amount": "Amount",
-    "submit": "Submit"
+    "add": "Add purchase",
+    "recent": "Recent purchases",
+    "emptyState": "No purchases recorded yet. Start by adding a purchase above.",
+    "quantityLabel": "Quantity",
+    "unitCostLabel": "Unit cost",
+    "totalCostLabel": "Total cost",
+    "purchaseNumberLabel": "Purchase #"
   },
   "permissions": {
     "owner": "Owner",
+    "partner": "Partner",
     "employee": "Employee",
     "accessRights": "Access Rights"
+  },
+  "roles": {
+    "owner": "Owner",
+    "partner": "Partner",
+    "employee": "Employee"
   },
   "errors": {
     "loginFailed": "Login failed. Please check your credentials.",
@@ -39,5 +225,41 @@
   "success": {
     "saleRecorded": "Sale recorded successfully.",
     "purchaseRecorded": "Purchase recorded successfully."
+  },
+  "auth": {
+    "passwordsDoNotMatch": "Passwords do not match.",
+    "usernameTaken": "This username is already in use.",
+    "invalidCredentials": "Invalid username or password.",
+    "genericError": "Something went wrong. Please try again.",
+    "managerNotFound": "We couldn't find your account owner.",
+    "managerPrivilegesRequired": "Only owners or partners can create employee accounts.",
+    "sessionMissing": "Your session expired. Please sign in again."
+  },
+  "globalSearch": {
+    "openButton": "Search",
+    "title": "Search your data",
+    "subtitle": "Find invoices instantly by seller, buyer, number or date.",
+    "close": "Close search",
+    "fields": {
+      "searchTerm": "Search everything",
+      "invoiceNumber": "Invoice number",
+      "sellerName": "Seller name",
+      "buyerName": "Buyer name",
+      "saleDate": "Specific day",
+      "startDate": "From date",
+      "endDate": "To date"
+    },
+    "placeholders": {
+      "searchTerm": "Type to search across invoices, notes and items",
+      "invoiceNumber": "e.g. INV-2023-1002",
+      "sellerName": "Seller name",
+      "buyerName": "Buyer name"
+    },
+    "resultsHeading": "{{count}} results found",
+    "empty": "No matches found. Try adjusting your filters.",
+    "matches": {
+      "lineItems": "Matching items",
+      "notes": "Matching notes"
+    }
   }
 }

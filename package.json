@@ -18,14 +18,16 @@
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "electron": "^latest",
+    "i18next": "^latest",
+    "i18next-browser-languagedetector": "^latest",
+    "i18next-http-backend": "^latest",
     "react": "^latest",
     "react-dom": "^latest",
-    "redux": "^latest",
     "react-redux": "^latest",
-    "i18next": "^latest",
-    "i18next-http-backend": "^latest",
-    "i18next-browser-languagedetector": "^latest"
+    "redux": "^latest",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "typescript": "^latest",

@@ -1,42 +1,264 @@
 {
-  "login": {
-    "title": "تسجيل الدخول",
-    "username": "اسم المستخدم",
-    "password": "كلمة المرور",
-    "loginButton": "تسجيل الدخول",
-    "forgotPassword": "نسيت كلمة المرور؟"
+  "app": {
+    "title": "إدارة المبيعات",
+    "subtitle": "تابع كل الفواتير والمبيعات والمشتريات في مساحة عمل أنيقة واحدة.",
+    "navigation": "قائمة التنقل الرئيسية"
   },
-  "dashboard": {
-    "welcome": "مرحبًا بك في لوحة التحكم",
+  "nav": {
+    "dashboard": "الرئيسية",
     "sales": "المبيعات",
     "purchases": "المشتريات",
     "logout": "تسجيل الخروج"
   },
+  "login": {
+    "title": "تسجيل الدخول",
+    "subtitle": "وصول آمن إلى لوحة أعمالك",
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "submit": "تسجيل الدخول",
+    "authenticating": "جارٍ التحقق من الهوية...",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
+    "createAccount": "إنشاء حساب جديد",
+    "sessionSecurity": "جلسات الدخول محمية ببصمة الجهاز.",
+    "support": "هل تحتاج مساعدة؟",
+    "securityTitle": "دخول موثوق",
+    "securitySubtitle": "نحمي كل عملية تسجيل دخول ونحافظ على تزامن فريقك.",
+    "security": {
+      "audit": "سجل نشاط مباشر",
+      "auditDescription": "يتم تسجيل كل دخول وخروج وتعديل مستخدم تلقائيًا.",
+      "roles": "صلاحيات حسب الدور",
+      "rolesDescription": "يتمتع المالك والشريك بالتحكم الكامل بينما يركز الموظفون على الفواتير فقط.",
+      "team": "متوافق مع الشركاء",
+      "teamDescription": "ادعُ فريقك بأمان وتحكم في الصلاحيات بسهولة."
+    }
+  },
+  "register": {
+    "title": "إنشاء مساحة العمل",
+    "subtitle": "اختر نوع الحساب الرئيسي ويمكنك إضافة الفريق لاحقًا.",
+    "roleLabel": "نوع الحساب",
+    "roles": {
+      "owner": {
+        "title": "مالك",
+        "description": "تحكم كامل مع صلاحية إدارة المخزون والفريق."
+      },
+      "partner": {
+        "title": "شريك",
+        "description": "تحكم مشترك وصلاحية إنشاء حسابات الموظفين."
+      }
+    },
+    "fullName": "الاسم الكامل",
+    "fullNamePlaceholder": "اسم صاحب الحساب",
+    "companyName": "اسم المؤسسة",
+    "companyPlaceholder": "الاسم التجاري أو المعرض",
+    "phone": "رقم الهاتف",
+    "phonePlaceholder": "هاتف التواصل",
+    "username": "اسم المستخدم",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "submit": "إنشاء الحساب",
+    "submitting": "جاري تجهيز الحساب...",
+    "securityHint": "يتم تشفير كلمات المرور بمعايير عالية.",
+    "haveAccount": "هل لديك حساب بالفعل؟",
+    "backToLogin": "العودة لتسجيل الدخول",
+    "securityTitle": "حماية احترافية",
+    "securitySubtitle": "بياناتك مشفرة مع سجل تدقيق وصلاحيات دقيقة للفريق.",
+    "security": {
+      "passwords": "تشفير قوي",
+      "passwordsDescription": "يتم تشفير بيانات الدخول بخوارزميات حديثة.",
+      "audit": "سجل كامل",
+      "auditDescription": "تابع كل التغييرات في جدول زمني واضح.",
+      "team": "تحكم ذكي بالفريق",
+      "teamDescription": "امنح الموظفين صلاحية الفواتير دون كشف المخزون."
+    }
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "welcome": "مرحبًا بك في لوحة التحكم",
+    "subtitle": "كل أدوات عملك على بعد نقرة واحدة.",
+    "sales": "المبيعات",
+    "salesDescription": "أنشئ الفواتير، نظم العناصر، واطبع إيصالات متقنة.",
+    "purchases": "المشتريات",
+    "purchasesDescription": "سجل المخزون الوارد واحتفظ بنشاط الموردين منظمًا.",
+    "open": "فتح"
+  },
+  "team": {
+    "heading": "إدارة الفريق",
+    "membersCount": "{{count}} عضو في الفريق",
+    "inviteTitle": "دعوة الموظفين",
+    "inviteSubtitle": "يمكن للموظفين استخراج الفواتير فقط دون رؤية المخزون.",
+    "fullName": "الاسم الكامل",
+    "fullNamePlaceholder": "اسم الموظف (اختياري)",
+    "username": "اسم المستخدم",
+    "phone": "رقم الهاتف",
+    "password": "كلمة مرور مؤقتة",
+    "create": "إنشاء موظف",
+    "creating": "جارٍ الإنشاء...",
+    "permissionHint": "صلاحيات الموظفين تقتصر على الفواتير، المخزن مخفي عنهم.",
+    "membersTitle": "أعضاء الفريق",
+    "invoiceAccess": "فواتير فقط",
+    "restrictedInventory": "المخزون مخفي",
+    "empty": "لا يوجد موظفون حتى الآن، ابدأ بدعوة أول موظف.",
+    "success": "تمت إضافة الموظف بنجاح.",
+    "activityTitle": "سجل الأمان",
+    "activityEmpty": "لا يوجد نشاط حتى الآن.",
+    "refreshActivity": "تحديث سجل الأمان",
+    "activity": {
+      "account": {
+        "registered": "تم إنشاء مساحة العمل"
+      },
+      "auth": {
+        "login": "تسجيل دخول ناجح",
+        "logout": "تم تسجيل الخروج"
+      },
+      "security": {
+        "failed_login": "محاولة دخول فاشلة للمستخدم {{username}}"
+      },
+      "team": {
+        "create_employee": "تمت دعوة موظف جديد ({{employeeUsername}})"
+      }
+    }
+  },
   "sales": {
-    "title": "المبيعات",
-    "recordSale": "تسجيل بيع",
-    "saleDate": "تاريخ البيع",
-    "buyer": "المشتري",
-    "itemType": "نوع العنصر",
-    "amount": "المبلغ",
-    "submit": "إرسال"
+    "title": "المبيعات والفواتير",
+    "subtitle": "اربط الموردين والإطارات والمشترين داخل كل فاتورة واطبعها بسهولة.",
+    "searchPlaceholder": "ابحث في الفواتير بالرقم أو المشتري أو البائع أو المورد أو الماركة",
+    "newInvoiceTitle": "إنشاء فاتورة مترابطة",
+    "newInvoiceSubtitle": "اربط بيانات المشتري والبائع والمورد والإطار لضمان وضوح العلاقات.",
+    "invoiceNumberLabel": "رقم الفاتورة",
+    "saleDateLabel": "تاريخ البيع",
+    "sellerLabel": "البائع",
+    "buyerLabel": "المشتري",
+    "buyerSelector": "اختر المشتري",
+    "buyerSelectorPlaceholder": "حدد المشتري",
+    "buyerDetails": "بيانات المشتري",
+    "buyerNameLabel": "اسم المشتري",
+    "buyerCodeLabel": "رقم / كود المشتري",
+    "buyerPhoneLabel": "رقم الهاتف",
+    "buyerEmailLabel": "البريد الإلكتروني",
+    "buyerAddressLabel": "العنوان",
+    "buyerLocationLabel": "المدينة / الموقع",
+    "lineItemsTitle": "عناصر الفاتورة",
+    "lineItemPlaceholder": "اختر نوع الإطار والكمية",
+    "addLineItem": "إضافة بند",
+    "removeLineItem": "حذف البند",
+    "tireSelector": "الإطار / المنتج",
+    "tireSelectorPlaceholder": "اختر الماركة والمقاس",
+    "lineItemDescription": "الوصف",
+    "lineItemQuantity": "الكمية",
+    "lineItemPrice": "سعر الوحدة",
+    "remainingQuantityLabel": "الكمية المتبقية بعد البيع",
+    "lastPurchaseLabel": "آخر تاريخ شراء",
+    "lastSaleLabel": "آخر تاريخ بيع",
+    "hasStockLabel": "مخزون متاح",
+    "lineItemTotal": "إجمالي البند",
+    "notesLabel": "ملاحظات",
+    "notesPlaceholder": "ملاحظات داخلية عن الفاتورة أو شروط الدفع أو التسليم",
+    "saveInvoiceButton": "حفظ الفاتورة",
+    "resetFormButton": "إعادة ضبط النموذج",
+    "filterTitle": "تصفية الفواتير",
+    "clearFilters": "مسح عوامل التصفية",
+    "filterDate": "يوم محدد",
+    "filterStartDate": "من تاريخ",
+    "filterEndDate": "إلى تاريخ",
+    "filterBuyer": "المشتري",
+    "filterSeller": "البائع",
+    "filterImporter": "المورد",
+    "filterTire": "ماركة الإطار",
+    "anyOption": "الكل",
+    "savedInvoices": "الفواتير المحفوظة",
+    "savedInvoicesSubtitle": "اختر فاتورة لعرض الموردين والإطارات وسجل المشتري المرتبط بها.",
+    "noInvoicesMessage": "لا توجد فواتير مطابقة لعوامل التصفية الحالية. جرّب تعديل البحث أو أنشئ فاتورة جديدة.",
+    "printInvoiceButton": "طباعة",
+    "deleteInvoiceButton": "حذف",
+    "printWindowTitle": "فاتورة {{id}}",
+    "invoiceLabel": "فاتورة",
+    "totalLabel": "الإجمالي",
+    "relationshipsTitle": "العلاقات المرتبطة",
+    "relationshipsSubtitle": "تعرف على ارتباط المشتري والبائع والمورد والمخزون داخل هذه الفاتورة.",
+    "noInvoiceSelected": "اختر فاتورة لعرض تفاصيل العلاقات الخاصة بها.",
+    "buyerHistoryTitle": "سجل المشتري",
+    "noPreviousInvoices": "لا توجد فواتير سابقة لهذا المشتري.",
+    "importerOverviewTitle": "الموردون المرتبطون بهذه الفاتورة",
+    "noImporterData": "لا توجد بيانات مورد مرتبطة بالفاتورة المحددة.",
+    "tireMovementTitle": "حركة الإطارات والمخزون",
+    "stockAvailable": "متوفر بالمخزون",
+    "stockEmpty": "غير متوفر",
+    "quantityOnHandLabel": "الكمية المتاحة",
+    "unknownDate": "غير محدد",
+    "printWindow": {
+      "sellerContact": "البائع",
+      "buyerContact": "المشتري"
+    }
   },
   "purchases": {
     "title": "المشتريات",
+    "subtitle": "سجل المخزون الداخل واعرف من المورد.",
     "recordPurchase": "تسجيل شراء",
     "purchaseDate": "تاريخ الشراء",
     "supplier": "المورد",
     "itemType": "نوع العنصر",
-    "amount": "المبلغ",
-    "submit": "إرسال"
+    "add": "إضافة عملية شراء",
+    "recent": "أحدث المشتريات",
+    "emptyState": "لا توجد مشتريات حتى الآن. ابدأ بإضافة عملية شراء أعلاه.",
+    "quantityLabel": "الكمية",
+    "unitCostLabel": "سعر الوحدة",
+    "totalCostLabel": "الإجمالي",
+    "purchaseNumberLabel": "رقم أمر الشراء"
   },
   "permissions": {
     "owner": "مالك",
+    "partner": "شريك",
     "employee": "موظف",
     "accessRights": "حقوق الوصول"
+  },
+  "roles": {
+    "owner": "مالك",
+    "partner": "شريك",
+    "employee": "موظف"
   },
   "errors": {
     "invalidCredentials": "بيانات الاعتماد غير صحيحة",
     "accessDenied": "تم رفض الوصول"
+  },
+  "success": {
+    "saleRecorded": "تم تسجيل عملية البيع بنجاح.",
+    "purchaseRecorded": "تم تسجيل عملية الشراء بنجاح."
+  },
+  "auth": {
+    "passwordsDoNotMatch": "كلمتا المرور غير متطابقتين.",
+    "usernameTaken": "اسم المستخدم مستخدم بالفعل.",
+    "invalidCredentials": "اسم المستخدم أو كلمة المرور غير صحيحة.",
+    "genericError": "حدث خطأ غير متوقع، حاول مرة أخرى.",
+    "managerNotFound": "تعذر العثور على حساب المالك.",
+    "managerPrivilegesRequired": "فقط المالك أو الشريك يمكنه إنشاء حسابات الموظفين.",
+    "sessionMissing": "انتهت الجلسة، يرجى تسجيل الدخول مجددًا."
+  },
+  "globalSearch": {
+    "openButton": "بحث",
+    "title": "بحث في البيانات",
+    "subtitle": "ابحث عن الفواتير فورًا حسب البائع أو المشتري أو الرقم أو التاريخ.",
+    "close": "إغلاق البحث",
+    "fields": {
+      "searchTerm": "بحث شامل",
+      "invoiceNumber": "رقم الفاتورة",
+      "sellerName": "اسم البائع",
+      "buyerName": "اسم المشتري",
+      "saleDate": "يوم محدد",
+      "startDate": "من تاريخ",
+      "endDate": "إلى تاريخ"
+    },
+    "placeholders": {
+      "searchTerm": "اكتب للبحث في الفواتير والملاحظات والعناصر",
+      "invoiceNumber": "مثال: INV-2023-1002",
+      "sellerName": "اسم البائع",
+      "buyerName": "اسم المشتري"
+    },
+    "resultsHeading": "تم العثور على {{count}} نتيجة",
+    "empty": "لا توجد نتائج مطابقة. جرّب تعديل عوامل التصفية.",
+    "matches": {
+      "lineItems": "عناصر مطابقة",
+      "notes": "ملاحظات مطابقة"
+    }
   }
 }

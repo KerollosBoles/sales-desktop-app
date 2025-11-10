@@ -1,0 +1,200 @@
+.app-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: clamp(16px, 3vw, 28px);
+    padding: clamp(12px, 2vw, 20px) clamp(16px, 3vw, 28px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    margin: clamp(12px, 2vw, 22px) auto;
+    width: calc(100% - 32px);
+    max-width: var(--app-max-width);
+}
+
+.app-header__brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.app-header__logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.14), rgba(16, 185, 129, 0.18));
+    color: var(--color-primary-strong);
+}
+
+.app-header__brand-copy {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.app-header__brand-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.app-header__brand-subtitle {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+.app-header__nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 0 12px;
+}
+
+.app-header__nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.app-header__nav a:hover,
+.app-header__nav a:focus {
+    background: rgba(37, 99, 235, 0.12);
+    color: var(--color-primary-strong);
+}
+
+.app-header__nav .is-active {
+    background: var(--color-primary);
+    color: #ffffff;
+    box-shadow: 0 14px 30px rgba(37, 99, 235, 0.28);
+}
+
+.app-header__actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.app-header__user {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.35);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+}
+
+.app-header__user-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(37, 99, 235, 0.2);
+    color: var(--color-primary-strong);
+}
+
+.app-header__user-copy {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.app-header__user-copy span {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.app-header__user-copy small {
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+}
+
+.app-header__search-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 999px;
+    padding: 10px 18px;
+    background: rgba(37, 99, 235, 0.16);
+    color: var(--color-primary-strong);
+    border: none;
+    font-weight: 600;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.app-header__search-button:hover,
+.app-header__search-button:focus {
+    outline: none;
+    background: rgba(37, 99, 235, 0.25);
+    transform: translateY(-1px);
+}
+
+.app-header__search-button--mobile {
+    display: none;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 920px) {
+    .app-header {
+        grid-template-columns: 1fr;
+        justify-items: stretch;
+    }
+
+    .app-header__nav {
+        order: 3;
+        flex-wrap: wrap;
+    }
+
+    .app-header__actions {
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 640px) {
+    .app-header {
+        padding: 12px 16px;
+    }
+
+    .app-header__brand-copy {
+        display: none;
+    }
+
+    .app-header__search-button {
+        display: none;
+    }
+
+    .app-header__search-button--mobile {
+        display: inline-flex;
+    }
+
+    .app-header__nav {
+        justify-content: space-between;
+    }
+
+    .app-header__nav a {
+        flex: 1;
+        justify-content: center;
+        padding: 10px 12px;
+    }
+
+    .app-header__user {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
